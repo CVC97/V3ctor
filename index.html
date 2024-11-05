@@ -1,0 +1,503 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta lang="de" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>V3ctor</title>
+        <link rel="icon" type="image/png" href="res/icon.png" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
+        />
+        <link href="./scripts/style.css" rel="stylesheet" />
+        <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ></script>
+    </head>
+    <body>
+        <!-- Main Body -->
+        <script src="https://cdn.jsdelivr.net/npm/mathjs@10.4.2/lib/browser/math.min.js"></script>
+        <!-- JavaScript Bundle with Popper -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"
+        ></script>
+
+        <!-- Import the button functions -->
+        <script src="./scripts/v3ctor.js" type="module"></script>
+        <script type="module">
+            import {
+                clickPressField,
+                clickedGauss,
+                clickedStokes,
+                clickedPolar,
+                clickedCartesian,
+                clickedLanguage,
+                insertPhi_x,
+                insertPhi_y,
+            } from "./scripts/v3ctor.js";
+            window.clickPressField = clickPressField;
+            window.clickedGauss = clickedGauss;
+            window.clickedStokes = clickedStokes;
+            window.clickedCartesian = clickedCartesian;
+            window.clickedPolar = clickedPolar;
+            window.switch_lang = clickedLanguage;
+            window.insertPhi_x = insertPhi_x;
+            window.insertPhi_y = insertPhi_y;
+        </script>
+        <!-- Header Row -->
+        <div class="container pt-4 content">
+            <div class="row">
+                <div class="col-10">
+                    <h1>
+                        <a
+                            tabindex="0"
+                            id="icon-btn"
+                            class="btn"
+                            role="button"
+                            data-bs-toggle="popover"
+                            data-bs-trigger="focus"
+                            data-bs-content="Die Applikation wurde an der Fakultät für Physik der Universität Göttingen in der Didaktik der Physik (Prof. Dr. Pascal Klein) für Lehrzwecke entwickelt. Kontakt für Feedback und Fragen: Simon Blaue, Larissa Hahn (larissa.hahn@uni-goettingen.de)."
+                        >
+                            <img
+                                src="./res/icon.png"
+                                class="float-left"
+                                width="50"
+                                type="'button"
+                            />
+                        </a>
+                        Vere Vedi Vecu
+                    </h1>
+                    <h2 id="subheader">
+                        Eine forschungsbasierte Simulation zu Vektorfeldern
+                        Divergenz und Curl
+                    </h2>
+                </div>
+                <div class="col-2">
+                    <a
+                        tabindex="0"
+                        id="info-btn"
+                        class="btn btn-secondary float-end"
+                        role="button"
+                        data-bs-toggle="popover"
+                        data-bs-trigger="focus"
+                        data-bs-content="Halte die Maus über den einzelnen Elementen still, um mehr über sie zu erfahren."
+                        >Info</a
+                    >
+                    <button
+                        class="btn btn-secondary float-end mt-4"
+                        type="button"
+                        id="lang-btn"
+                        onclick="switch_lang(event)"
+                    >
+                        Switch to English
+                    </button>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-6">
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <!-- Dropdown für Integral -->
+                            <div
+                                class="dropdown text-center mb-3"
+                                id="dropdown-menu"
+                            >
+                                <div id="dropdown-menu-tooltip"></div>
+                                <button
+                                    class="btn btn-primary dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton1-label"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    data-toggle="popover"
+                                >
+                                    Integralsatz
+                                </button>
+                                <ul
+                                    class="dropdown-menu"
+                                    aria-labelledby="dropdownMenuButton1"
+                                >
+                                    <li>
+                                        <button
+                                            class="dropdown-item active"
+                                            id="Btn-Gauss"
+                                            onclick="clickedGauss(event)"
+                                        >
+                                            Satz von Gauß
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            class="dropdown-item"
+                                            id="Btn-Stokes"
+                                            onclick="clickedStokes(event)"
+                                        >
+                                            Satz von Stokes
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <img
+                            src="./res/Latex_Gauss.png"
+                            class="col-6 p-4"
+                            id="latex_img"
+                            data-bs-toggle="tooltip"
+                        />
+                        <hr />
+                        <!-- Latex Formel -->
+
+                        <!-- Vektorfeld eingabe -->
+                        <div class="col-6 mt-2">
+                            <h3
+                                class="float-start"
+                                data-bs-html="true"
+                                id="vectorfield_define_label"
+                            >
+                                Definiere das Vektorfeld:
+                            </h3>
+                            <!-- Dropdown für Koordinaten -->
+                            <div
+                                class="dropdown text-center float-start mt-4"
+                                id="dropdown-menu"
+                            >
+                                <div id="dropdown-menu-tooltip"></div>
+                                <button
+                                    class="btn btn-primary dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton1-coords"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    data-toggle="popover"
+                                >
+                                    Koordinatensystem
+                                </button>
+                                <ul
+                                    class="dropdown-menu"
+                                    aria-labelledby="dropdownMenuButton1-coords"
+                                >
+                                    <li>
+                                        <button
+                                            class="dropdown-item active"
+                                            id="Btn-Cartesian"
+                                            onclick="clickedCartesian(event)"
+                                        >
+                                            Kartesische Koordinaten
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            class="dropdown-item"
+                                            id="Btn-Polar"
+                                            onclick="clickedPolar(event)"
+                                        >
+                                            Polarkoordinaten
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-3">
+                            <form>
+                                <div class="mb-3">
+                                    <label
+                                        for="x-component"
+                                        data-bs-html="true"
+                                        class="form-label"
+                                        id="x_comp_label"
+                                        >x-Komponente:</label
+                                    >
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                data-bs-html="true"
+                                                id="x-component"
+                                                value="x"
+                                                onkeypress="clickPressField(event)"
+                                            />
+                                        </div>
+                                        <div class="col-2" id="xphibtn">
+                                            <button
+                                                class="btn btn-light"
+                                                type="button"
+                                                onclick="insertPhi_x()"
+                                            >
+                                                φ
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label
+                                        for="y-component"
+                                        data-bs-html="true"
+                                        class="form-label"
+                                        id="y_comp_label"
+                                        >y-Komponente:</label
+                                    >
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                data-bs-html="true"
+                                                id="y-component"
+                                                value="y"
+                                                onkeypress="clickPressField(event)"
+                                            />
+                                        </div>
+                                        <div class="col-2" id="yphibtn">
+                                            <button
+                                                class="btn btn-light"
+                                                type="button"
+                                                onclick="insertPhi_y()"
+                                            >
+                                                φ
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    class="btn btn-primary"
+                                    id="btn-reset"
+                                    type="button"
+                                    onclick="clickPressField(event)"
+                                >
+                                    Neu berechnen
+                                </button>
+                                <button
+                                    class="btn btn-primary"
+                                    id="btn-recalc"
+                                    type="button"
+                                    onclick="window.location.reload()"
+                                >
+                                    Zurücksetzen
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr />
+                    <!-- Vektorfeld darstellung -->
+                    <div class="row">
+                        <form>
+                            <div class="mb-3">
+                                <label
+                                    for="vector-amount-label"
+                                    data-bs-html="true"
+                                    class="form-label"
+                                    id="vector-amount-label"
+                                    >Anzahl der Vektoren:</label
+                                >
+                                <input
+                                    type="number"
+                                    data-bs-html="true"
+                                    class="form-control"
+                                    max="25"
+                                    min="5"
+                                    id="vector-amount"
+                                    value="11"
+                                    onkeypress="clickPressField(event)"
+                                />
+                            </div>
+                            <div class="form-check mb-3">
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="coordinatesystem"
+                                />
+                                <label
+                                    for="coordinatesystem"
+                                    class="form-check-label"
+                                    id="coordinatesystem-label"
+                                    >Koordinatensystem einblenden</label
+                                >
+                            </div>
+                            <div class="form-check mb-3">
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="coordinatesystem_ticks"
+                                    disabled="true"
+                                />
+                                <label
+                                    for="coordinatesystem_ticks"
+                                    class="form-check-label"
+                                    id="coordinatesystem_ticks-label"
+                                    >Einzelticks anzeigen</label
+                                >
+                            </div>
+                        </form>
+                    </div>
+                    <hr />
+                    <!-- ## -->
+                    <div class="row">
+                        <!-- Divergenz Optionen -->
+                        <div class="col-6">
+                            <h3 id="div_rot_header" data-bs-html="true">
+                                Divergenz
+                            </h3>
+                            <form>
+                                <div class="form-check mb-3">
+                                    <input
+                                        type="checkbox"
+                                        data-bs-html="true"
+                                        class="form-check-input"
+                                        id="fieldscanner"
+                                    />
+                                    <label
+                                        for="fieldscanner"
+                                        id="fieldscanner-label"
+                                        data-bs-html="true"
+                                        class="form-check-label"
+                                        >Feld abtasten</label
+                                    >
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input
+                                        type="checkbox"
+                                        data-bs-html="true"
+                                        class="form-check-input"
+                                        id="xcomponentview"
+                                    />
+                                    <label
+                                        for="xcomponentview"
+                                        data-bs-html="true"
+                                        class="form-check-label"
+                                        id="xcomponentview-label"
+                                        >x Komponente anzeigen</label
+                                    >
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input
+                                        type="checkbox"
+                                        data-bs-html="true"
+                                        class="form-check-input"
+                                        id="ycomponentview"
+                                    />
+                                    <label
+                                        for="ycomponentview"
+                                        data-bs-html="true"
+                                        class="form-check-label"
+                                        id="ycomponentview-label"
+                                        >y Komponente anzeigen</label
+                                    >
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Integral Optionen -->
+                        <div class="col-6">
+                            <h3 id="flux_header" data-bs-html="true">
+                                Fluss durch Fläche
+                            </h3>
+                            <form>
+                                <div class="form-check mb-3">
+                                    <input
+                                        type="checkbox"
+                                        data-bs-html="true"
+                                        class="form-check-input"
+                                        id="projection"
+                                    />
+                                    <label
+                                        for="projection"
+                                        data-bs-html="true"
+                                        class="form-check-label"
+                                        id="projection_label"
+                                        >Projektion auf die Kurvennormale der
+                                        Fläche einblenden</label
+                                    >
+                                </div>
+                                <div
+                                    class="form-check mb-3"
+                                    id="paddlewheel_div"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        data-bs-html="true"
+                                        class="form-check-input"
+                                        id="paddlewheel"
+                                    />
+                                    <label
+                                        for="paddlewheel"
+                                        data-bs-html="true"
+                                        class="form-check-label"
+                                        id="paddlewheel-label"
+                                        >Paddlewheel einfügen</label
+                                    >
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Werte Anzeigen -->
+                        <div class="col-6">
+                            <h4
+                                class="text-bottom d-inline"
+                                id="div-rot-value-header"
+                            >
+                                Wert:
+                            </h4>
+                            <h4
+                                class="text-bottom d-inline"
+                                id="div-rot-value"
+                            ></h4>
+                        </div>
+                        <div class="col-6">
+                            <h4
+                                class="text-bottom d-inline"
+                                id="integral-value-header"
+                            >
+                                Wert:
+                            </h4>
+                            <h4
+                                class="text-bottom d-inline"
+                                id="integral-value"
+                            ></h4>
+                        </div>
+                    </div>
+                </div>
+                <canvas
+                    class="rounded col-6 d-block"
+                    style="
+                        padding: 0;
+                        background-color: white;
+                        border-color: black;
+                        border-style: solid;
+                    "
+                    id="canvas"
+                ></canvas>
+            </div>
+            <hr />
+        </div>
+        <!-- Footer -->
+        <footer class="text-center text-lg-start bg-light text-muted">
+            <!-- Copyright -->
+            <div
+                class="text-center p-4"
+                style="background-color: rgba(0, 0, 0, 0.05)"
+            >
+                2022 ~ Applikation bereitgestellt durch:
+                <a
+                    class="text-reset fw-bold"
+                    href="https://www.uni-goettingen.de/de/110922.html"
+                    target="blank"
+                    >Didaktik der Physik</a
+                >
+                der Universität Göttingen
+            </div>
+            <!-- Copyright -->
+            <button type="button" id="debugger">Neu laden!</button>
+        </footer>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="./scripts/math.diff.js"></script>
+        <!-- <script src="./scripts/v3ctor/docs.js"> </script>  -->
+    </body>
+</html>

@@ -1,0 +1,42 @@
+
+
+.text-justify{
+    text-align: justify;
+}
+
+.avatar-img{
+    /* max-width: 70%; */
+    padding-right: 5%;
+}
+
+.simonblaue{
+    display:flex;
+    align-items: center;
+}
+
+.simonblaue h1 {display:table-cell; vertical-align:middle}
+
+.content{
+    min-height: 100vh;
+}
+
+/* Navbar  */
+.fa-1x {
+    font-size: 1.5rem;
+  }
+  .navbar-toggler.toggler-example {
+    cursor: pointer;
+  }
+  .dark-blue-text {
+    color: #0A38F5;
+  }
+  .dark-pink-text {
+    color: #AC003A;
+  }
+  .dark-amber-text {
+    color: #ff6f00;
+  }
+  .dark-teal-text {
+    color: #004d40;
+  }
+
