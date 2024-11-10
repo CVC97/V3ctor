@@ -61,10 +61,10 @@ let coordinate_checkbox_text =
   "Durch Aktivierung werden die Koordinatenachsen in den kartesischen Koordinaten x und y  eingeblendet. ";
 
 let rectangle_text_gauss =
-  "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Divergenz wird am Mittelpunkt des Rechtecks berechnet. ";
+  "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Divergenz wird am Mittelpunkt des Rechtecks berechnet. Ein Doppelklick entfernt das Rechteck und sämtliche eingezeichneten Vektoren. ";
 
 let rectangle_text_stokes =
-  "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Die Zirkulation durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Rotation wird am Mittelpunkt des Rechtecks berechnet. ";
+  "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Die Zirkulation durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Rotation wird am Mittelpunkt des Rechtecks berechnet. Ein Doppelklick entfernt das Rechteck und sämtliche eingezeichneten Vektoren. ";
 
 let fieldscanner_text_gauss =
   "Bei Aktivierung von <i>Feld abtasten</i> können durch Festhalten der Maustaste Vektorern eingezeichnet werden. Für diese Stelle wird der Wert der Divergenz angezeigt. ";
@@ -249,10 +249,10 @@ export function switch_language(old_lang, theorem, coords) {
       "Display the coordinate axes in Cartesian coordinates x and y.";
 
     rectangle_text_gauss =
-      "Draw a rectangle into the vector field with the mouse held down (<i>Scan field</i> must be deactivated). Move the drawn rectangle in the field with the mouse and shift its borders arbitrary. The flow through the boundary of the drawn rectangle area is shown below. The divergence is calculated at the center of the rectangle. ";
+      "Draw a rectangle into the vector field with the mouse held down (<i>Scan field</i> must be deactivated). Move the drawn rectangle in the field with the mouse and shift its borders arbitrary. The flow through the boundary of the drawn rectangle area is shown below. The divergence is calculated at the center of the rectangle. Double-clicking removes the rectangle all additionally drawn vectors. ";
 
     rectangle_text_stokes =
-      "Draw a rectangle into the vector field with the mouse held down (<i>Scan field</i> must be deactivated). Move the drawn rectangle in the field with the mouse and shift its borders arbitrary. The circulation along the boundary of the drawn rectangle area is shown below. The curl is calculated at the center of the rectangle. Display the projection of the field vectors on the vector path element of the rectangle curve by activating the corresponding box. Insert a paddle wheel in the vector field and move it in the field using the mouse. ";
+      "Draw a rectangle into the vector field with the mouse held down (<i>Scan field</i> must be deactivated). Move the drawn rectangle in the field with the mouse and shift its borders arbitrary. The circulation along the boundary of the drawn rectangle area is shown below. The curl is calculated at the center of the rectangle. Display the projection of the field vectors on the vector path element of the rectangle curve by activating the corresponding box. Insert a paddle wheel in the vector field and move it in the field using the mouse. Double-clicking removes the rectangle all additionally drawn vectors. ";
 
     fieldscanner_text_gauss =
       " Activate <i>Scan field</i> to draw additional vectors in the vector field by holding down the mouse button. The value of divergence for that point is displayed below. ";
@@ -307,10 +307,10 @@ export function switch_language(old_lang, theorem, coords) {
       "Durch Aktivierung werden die Koordinatenachsen in den kartesischen Koordinaten x und y  eingeblendet. ";
 
     rectangle_text_gauss =
-      "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Divergenz wird am Mittelpunkt des Rechtecks berechnet. ";
+      "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Divergenz wird am Mittelpunkt des Rechtecks berechnet. Ein Doppelklick im Vektorfeld entfernt das Rechteck und sämtliche eingezeichneten Vektoren. ";
 
     rectangle_text_stokes =
-      "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Die Zirkulation durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Rotation wird am Mittelpunkt des Rechtecks berechnet. ";
+      "Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). Dieses kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Die Zirkulation durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. Die Rotation wird am Mittelpunkt des Rechtecks berechnet. Ein Doppelklick im Vektorfeld entfernt das Rechteck und sämtliche eingezeichneten Vektoren. ";
 
     fieldscanner_text_gauss =
       "Bei Aktivierung von <i>Feld abtasten</i> können durch Festhalten der Maustaste Vektorern eingezeichnet werden. Für diese Stelle wird der Wert der Divergenz angezeigt. ";

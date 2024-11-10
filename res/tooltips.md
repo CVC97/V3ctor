@@ -6,7 +6,7 @@ Mit diesem Eingabefeld kann die Anzahl an Vektoren pro reihe variiert werden. Ei
 
 Durch Aktivierung dies Boxen werden die Koordinatenachsen in den kartesischen Koordinaten x und y  eingeblendet.
 
-Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden. Dafür muss die CheckBox **Feld abtasten** deaktiviert sein. Das Rechteck kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch bzw. entlang des Randes der aufgezogenen Rechteckfläche kann durch die Projektions Checkbox angezeigt werden. Die Angezeigte Divergenz bzw. Rotation wird am Mittelpunkt des Rechtecks berechnet.
+Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden. Dafür muss die CheckBox **Feld abtasten** deaktiviert sein. Das Rechteck kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch bzw. entlang des Randes der aufgezogenen Rechteckfläche kann durch die Projektions Checkbox angezeigt werden. Die Angezeigte Divergenz bzw. Rotation wird am Mittelpunkt des Rechtecks berechnet. Ein Doppelklick im Vektorfeld entfernt das Rechteck und sämtliche eingezeichneten Vektoren.
 
 
 Bei Aktivierung der CkeckBox **Feld abtasten** können durch Festhalten der Maustaste Vektorern eingezeichnet werden. Für diese Stelle wird der Wert der Divergenz bzw der Rotation angezeigt.

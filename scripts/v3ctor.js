@@ -469,6 +469,8 @@ export function clickPressField(event) {
 	}
 }
 
+
+// resets the page (currently not in use ?)
 export function resetPage(event) {
 	vector_amount_entry.value = 11;
 	amount_of_vectors = vector_amount_entry.value;
@@ -496,6 +498,7 @@ export function resetPage(event) {
 	set_integral_label();
 	redraw_canvas();
 }
+
 
 // Event Handeling for checkboxes
 
@@ -544,23 +547,27 @@ coordinate_checkbox.addEventListener("change", (event) => {
 // Checkbox: single-ticks
 coordinate_tick_checkbox.addEventListener("change", (event) => {
 	if (coordinate_tick_checkbox.checked) {
-		coordinates.active = false;
-		redraw_canvas();
-		coordinates = new Coordinatelines(canvas, F1, 1);
-		coordinates.active = true;
-		coordinates.draw(c);
+		let coordinate_type = coordinates.type;					// save the type of the coordinate system for reinitialization
+		coordinates.active = false;								// set coordinate system to inactive for redrawing of canvas
+		redraw_canvas();										// redraw canvas without coordinate system
+		coordinates = new Coordinatelines(canvas, F1, 1);		// reinitialize coordinate system with according tick spaceing
+		coordinates.type = coordinate_type;						// set accoring coordinate type (euclid / polar) for reinitialization
+		coordinates.active = true;								// set coordinate system active for redrawing coordinate system			
+		coordinates.draw(c);									// draw coordinate system
 
 	} else {
-		coordinates.active = false;
-		redraw_canvas();
-		coordinates = new Coordinatelines(canvas, F1, 2);
-		coordinates.active = true;
-		coordinates.draw(c);
+		let coordinate_type = coordinates.type;					// save the type of the coordinate system for reinitialization
+		coordinates.active = false;								// set coordinate system to inactive for redrawing of canvas
+		redraw_canvas();										// redraw canvas without coordinate system
+		coordinates = new Coordinatelines(canvas, F1, 2);		// reinitialize coordinate system with according tick spaceing
+		coordinates.type = coordinate_type;						// set accoring coordinate type (euclid / polar) for reinitialization
+		coordinates.active = true;								// set coordinate system active for redrawing coordinate system
+		coordinates.draw(c);									// draw coordinate system
 	}
 });
 
 
-// Fieldscanenr checkbox
+// Fieldscanner checkbox
 fieldscanner_checkbox.addEventListener("change", (event) => {
 	if (fieldscanner_checkbox.checked) {
 		F1.rec_vectors = [];
@@ -578,6 +585,7 @@ fieldscanner_checkbox.addEventListener("change", (event) => {
 	}
 	redraw_canvas();
 });
+
 
 // Projections checkbox
 projections_checkbox.addEventListener("change", (event) => {
@@ -634,22 +642,27 @@ canvas.addEventListener("click", (event) => {
 	};
 	const p_coord = F1.transform(p_canvas);
 
+	// clicking on canvas with fieldscanner ON
 	if (fieldscanner_checkbox.checked) {
-		var v = F1.value_at(p_coord.x, p_coord.y);
-		v.x *= F1.norm_factor;
-		v.y *= F1.norm_factor;
-		v.recalc_len();
-		F1.fieldscanner_vectors.push({ p: p_canvas, v: v });
+		var field_vector = F1.value_at(p_coord.x, p_coord.y, true);
+		console.log("x:" + p_coord.x + ", y:" + p_coord.y);
+		console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
+		field_vector.x *= F1.norm_factor;
+		field_vector.y *= F1.norm_factor;
+		field_vector.recalc_len();
+		F1.fieldscanner_vectors.push({ p: p_canvas, v: field_vector });
 		set_div_rot_label(p_coord);
-
+		// partical x-vectors are displayed
 		if (partial_x_checkbox.checked) {
 			F1.add_partial_x_vectors(F1.fieldscanner_vectors);
 		}
+		// partial y-vectors are displayed
 		if (partial_y_checkbox.checked) {
 			F1.add_partial_y_vectors(F1.fieldscanner_vectors);
 		}
 	}
 
+	// clicking on canvas with projections ON
 	if (projections_checkbox.checked) {
 		if (theorem == "gauss") {
 			rect.draw_surface_vektores();

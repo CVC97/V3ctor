@@ -20,8 +20,8 @@ export class Field {
 	base_arrow_color = "black";
 
   	constructor(x, y, canvas, amount_of_vectors, coordinate_system) {
-		this.x = x;
-		this.y = y;
+		this.x_component = x;
+		this.y_component = y;
 		this.coordinate_system = coordinate_system;
 		this.canvas = canvas;
 		// this is actually smart: ensures that vectors are not overlapping
@@ -40,27 +40,46 @@ export class Field {
   	}
 
 	/// Math operations //
-	value_at(x, y) {
-    	let Fx,
-      	Fy = 0;
+	value_at(x, y, evaluate_this = false) {
+    	let Fx, Fy = 0;
     	if (this.coordinate_system == "cartesian") {
-			Fx = math.evaluate(this.x, { x: x, y: y });
-			Fy = math.evaluate(this.y, { x: x, y: y });
-    	} else if (this.coordinate_system == "polar") {
-		let r = Math.hypot(x, y);
-		let phi = Math.atan2(y, x);
+			// calculation r, phi also in cartesian coordinates
+			let r = Math.hypot(x, y);
+			let phi = Math.atan2(y, x);														// atan2 output negative for phi > pi
+			// fixing the negative atan2 output
+			if (phi < 0) {
+				phi = 2*Math.PI + phi;
+			}
 
-		let Fr = math.evaluate(this.x, { r: r, φ: phi });
-		let Fphi = math.evaluate(this.y, { r: r, φ: phi });
-		Fx = Fr * Math.cos(phi) - Fphi * Math.sin(phi);
-		Fy = Fr * Math.sin(phi) + Fphi * Math.cos(phi);
+			// evaluate cartesian vectors 
+			Fx = math.evaluate(this.x_component, { x: x, y: y, r: r, φ: phi, phi: phi });
+			Fy = math.evaluate(this.y_component, { x: x, y: y, r: r, φ: phi, phi: phi });
+    	} else if (this.coordinate_system == "polar") {
+			// calculation of r, phi from input
+			let r = Math.hypot(x, y);
+			let phi = Math.atan2(y, x);														// atan2 output negative for phi > pi
+			// fixing the negative atan2 output
+			if (phi < 0) {
+				phi = 2*Math.PI + phi;
+			}
+			if (evaluate_this)  {
+				console.log("r:" + r + ", phi:" + phi);
+			}
+			
+			// evaluate polar vectors
+			let Fr = math.evaluate(this.x_component, { x: x, y: y, r: r, φ: phi, phi: phi });
+			let Fphi = math.evaluate(this.y_component, { x: x, y: y, r: r, φ: phi, phi: phi });
+			Fx = Fr * Math.cos(phi) - Fphi * Math.sin(phi);
+			Fy = Fr * Math.sin(phi) + Fphi * Math.cos(phi);
     	}
     	return new Vector2d(Fx, Fy, this.base_arrow_color);
   	}
 
+
+	// calculates the divergence at a given point (with p.x, p.y)
   	divergence_at(p) {
-		var expr_x = math.parse(this.x);
-		var expr_y = math.parse(this.y);
+		var expr_x = math.parse(this.x_component);
+		var expr_y = math.parse(this.y_component);
 		if (this.coordinate_system == "cartesian") {
 			var diff_Fx_x = math.derivative(expr_x, "x");
 			var diff_Fy_y = math.derivative(expr_y, "y");
@@ -78,9 +97,12 @@ export class Field {
     	}
     return divergence;
   	}
+
+
+	// calculates the curl at a given point (with p.x, p.y)
   	curl_at(p) {
-		var expr_x = math.parse(this.x);
-		var expr_y = math.parse(this.y);
+		var expr_x = math.parse(this.x_component);
+		var expr_y = math.parse(this.y_component);
 		if (this.coordinate_system == "cartesian") {
 		var diff_Fx_y = math.derivative(expr_x, "y");
 		var diff_Fy_x = math.derivative(expr_y, "x");
@@ -102,6 +124,7 @@ export class Field {
     }
     return curl;
   	}
+
 
 	// Creating it now truly beautiful
 	create_vectors() {
@@ -222,6 +245,7 @@ export class Field {
 		}
 	}
 
+
 	add_partial_x_vectors(list) {
 		this.partial_x_vecs.splice(0, this.partial_x_vecs.length);
 		list.forEach((p_and_v) => {
@@ -233,6 +257,7 @@ export class Field {
 		}
 	}
 
+
 	add_partial_y_vectors(list) {
 		this.partial_y_vecs.splice(0, this.partial_y_vecs.length);
 		list.forEach((p_and_v) => {
@@ -243,6 +268,7 @@ export class Field {
 			this.partial_y_vecs = [];
 		}
 	}
+
 
 	transform(point) {
 		let x = ((point.x - this.canvas_middle.x) / (this.canvas.width / 2)) * 10; /// this.canvas_middle.x;
