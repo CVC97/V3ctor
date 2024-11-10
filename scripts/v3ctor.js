@@ -105,6 +105,11 @@ const partial_x_checkbox = document.querySelector("#xcomponentview");
 const partial_x_checkbox_label = document.querySelector("#xcomponentview-label");
 const partial_y_checkbox = document.querySelector("#ycomponentview");
 const partial_y_checkbox_label = document.querySelector("#ycomponentview-label");
+//Partial r and phi
+const partial_r_checkbox = document.querySelector("#rcomponentview");
+const partial_r_checkbox_label = document.querySelector("#rcomponentview-label");
+const partial_phi_checkbox = document.querySelector("#phicomponentview");
+const partial_phi_checkbox_label = document.querySelector("#phicomponentview-label");
 //Projections
 const projections_checkbox = document.querySelector("#projection");
 // Output Labels
@@ -602,6 +607,7 @@ projections_checkbox.addEventListener("change", (event) => {
 	redraw_canvas();
 });
 
+
 // Patial checkboxes
 partial_x_checkbox.addEventListener("change", (event) => {
 	if (partial_x_checkbox.checked) {
@@ -616,6 +622,7 @@ partial_x_checkbox.addEventListener("change", (event) => {
 	redraw_canvas();
 });
 
+
 partial_y_checkbox.addEventListener("change", (event) => {
 	if (partial_y_checkbox.checked) {
 		F1.add_partial_y_vectors(
@@ -628,6 +635,34 @@ partial_y_checkbox.addEventListener("change", (event) => {
 	}
 	redraw_canvas();
 });
+
+// partial_r_checkbox.addEventListener("change", (event) => {
+// 	if (partial_r_checkbox.checked) {
+// 		F1.add_partial_r_vectors(
+// 		rect.vecs_in_rect
+// 			.concat(p_wheel.vecs_near_wheel)
+// 			.concat(F1.fieldscanner_vectors),
+// 		);
+// 	} else {
+// 		F1.add_partial_r_vectors([]);
+// 	}
+// 	redraw_canvas();
+// });
+
+
+// partial_phi_checkbox.addEventListener("change", (event) => {
+// 	if (partial_phi_checkbox.checked) {
+// 		F1.add_partial_phi_vectors(
+// 		rect.vecs_in_rect
+// 			.concat(p_wheel.vecs_near_wheel)
+// 			.concat(F1.fieldscanner_vectors),
+// 		);
+// 	} else {
+// 		F1.add_partial_phi_vectors([]);
+// 	}
+// 	redraw_canvas();
+// });
+
 
 //// Interactivity Handling on Canvas ////
 

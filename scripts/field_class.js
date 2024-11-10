@@ -14,6 +14,8 @@ export class Field {
 	rec_vectors = [];
 	partial_x_vecs = [];
 	partial_y_vecs = [];
+	partial_r_vecs = [];
+	partial_phi_vecs = [];
 	p_wheel_partial_x = [];
 	p_wheel_partial_y = [];
 	background_color = "white";
@@ -51,7 +53,7 @@ export class Field {
 				phi = 2*Math.PI + phi;
 			}
 
-			// evaluate cartesian vectors 
+			// evaluate entries to calculate cartesian vectors
 			Fx = math.evaluate(this.x_component, { x: x, y: y, r: r, φ: phi, phi: phi });
 			Fy = math.evaluate(this.y_component, { x: x, y: y, r: r, φ: phi, phi: phi });
     	} else if (this.coordinate_system == "polar") {
@@ -62,11 +64,13 @@ export class Field {
 			if (phi < 0) {
 				phi = 2*Math.PI + phi;
 			}
+			
+			// log for bugfixing (delete later)
 			if (evaluate_this)  {
 				console.log("r:" + r + ", phi:" + phi);
 			}
 			
-			// evaluate polar vectors
+			// evaluate entries to calculate polar vectors
 			let Fr = math.evaluate(this.x_component, { x: x, y: y, r: r, φ: phi, phi: phi });
 			let Fphi = math.evaluate(this.y_component, { x: x, y: y, r: r, φ: phi, phi: phi });
 			Fx = Fr * Math.cos(phi) - Fphi * Math.sin(phi);
@@ -133,8 +137,6 @@ export class Field {
 			for (let j = this.canvas_middle.y - this.y_amount_of_vectors/2*this.max_possible_len; j < this.canvas.height; j += this.max_possible_len) {
 				var z = this.transform({ x: i, y: j });
 				var v = this.value_at(z.x, z.y);
-				// v.x *= this.norm_factor;
-				// v.y *= this.norm_factor;
         		this.vectors.push({ p: { x: i, y: j }, v: v });
 			}
 		}
@@ -246,6 +248,7 @@ export class Field {
 	}
 
 
+	// method to fill the list of partial x-vectors
 	add_partial_x_vectors(list) {
 		this.partial_x_vecs.splice(0, this.partial_x_vecs.length);
 		list.forEach((p_and_v) => {
@@ -258,6 +261,7 @@ export class Field {
 	}
 
 
+	// method to fill the list of partial x-vectors
 	add_partial_y_vectors(list) {
 		this.partial_y_vecs.splice(0, this.partial_y_vecs.length);
 		list.forEach((p_and_v) => {
