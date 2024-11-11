@@ -21,7 +21,7 @@ export class Vector2d {
    }
 
    draw_at(p, canvas_context) {
-       if (this.len < 2) {
+       if (this.len < 0.25) {
            return;
        }
        var fromx = p.x;

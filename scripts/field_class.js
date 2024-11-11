@@ -37,7 +37,7 @@ export class Field {
 		}
 		this.canvas_middle = { x: canvas.width / 2, y: canvas.height / 2 };
 		this.create_vectors();
-		this.normalize_to(this.max_possible_len);
+		this.normalize_to(0.9*this.max_possible_len);
 		// amount of vectors in x and y direction
 	}
 	
@@ -94,16 +94,16 @@ export class Field {
 			var divergence =
 				diff_Fx_x.evaluate({ x: p.x, y: p.y }) +
 				diff_Fy_y.evaluate({ x: p.x, y: p.y });
-    		} else if ((this.coordinate_system = "polar")) {
-		var diff_Fx_x = math.derivative("r*" + expr_x, "r");
-		var diff_Fy_y = math.derivative(expr_y, "φ");
-		var r = Math.hypot(p.x, p.y);
-		var φ = Math.atan2(p.y, p.x);
-		var divergence =
-			(1 / r) * diff_Fx_x.evaluate({ r: r, φ: φ }) +
-			(1 / r) * diff_Fy_y.evaluate({ r: r, φ: φ });
-    	}
-    return divergence;
+    	} else if ((this.coordinate_system = "polar")) {
+			var diff_Fx_x = math.derivative("r*" + expr_x, "r");
+			var diff_Fy_y = math.derivative(expr_y, "φ");
+			var r = Math.hypot(p.x, p.y);
+			var φ = Math.atan2(p.y, p.x);
+			var divergence =
+				(1 / r) * diff_Fx_x.evaluate({ r: r, φ: φ }) +
+				(1 / r) * diff_Fy_y.evaluate({ r: r, φ: φ });
+		}
+   		return divergence;
   	}
 
 
@@ -112,24 +112,25 @@ export class Field {
 		var expr_x = math.parse(this.x_component);
 		var expr_y = math.parse(this.y_component);
 		if (this.coordinate_system == "cartesian") {
-		var diff_Fx_y = math.derivative(expr_x, "y");
-		var diff_Fy_x = math.derivative(expr_y, "x");
-		var curl =
-			diff_Fy_x.evaluate({ x: p.x, y: p.y }) -
-			diff_Fx_y.evaluate({ x: p.x, y: p.y });
+			var diff_Fx_y = math.derivative(expr_x, "y");
+			var diff_Fy_x = math.derivative(expr_y, "x");
+			var curl =
+				diff_Fy_x.evaluate({ x: p.x, y: p.y }) -
+				diff_Fx_y.evaluate({ x: p.x, y: p.y });
     	} else if (this.coordinate_system == "polar") {
-		var diff_Fx_y = math.derivative(expr_x, "r");
-		var diff_Fy_x = math.derivative(expr_y, "φ");
-		var curl =
-			diff_Fy_x.evaluate({
-				r: Math.hypot(p.x, p.y),
-				φ: Math.atan2(p.y, p.x),
-			}) -
-        	diff_Fx_y.evaluate({
-				r: Math.hypot(p.x, p.y),
-				φ: Math.atan2(p.y, p.x),
-        });
-    }
+			var diff_Fx_y = math.derivative(expr_x, "r");
+			var diff_Fy_x = math.derivative(expr_y, "φ");
+			var curl =
+				diff_Fy_x.evaluate({
+					r: Math.hypot(p.x, p.y),
+					φ: Math.atan2(p.y, p.x),
+					
+				}) -
+				diff_Fx_y.evaluate({
+					r: Math.hypot(p.x, p.y),
+					φ: Math.atan2(p.y, p.x),
+			});
+    	}
     return curl;
   	}
 
