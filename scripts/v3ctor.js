@@ -2,12 +2,7 @@ import { Field } from "./field_class.js";
 import { Rectangle } from "./rect_class.js";
 import { Coordinatelines } from "./coordinates.js";
 import { Paddlewheel } from "./paddlewheel.js";
-import {
-    switch_tooltips,
-    switch_language,
-    switch_tooltip_coords,
-} from "./docs.js";
-
+import { switch_tooltips, switch_language,  switch_tooltip_coords, } from "./docs.js";
 import { Vector2d } from "./vector_class.js";
 
 window.addEventListener("resize", resize);
@@ -23,6 +18,7 @@ document.body.onmouseup = function () {
 };
 
 switch_tooltips("stokes");
+
 
 
 // Popover init from bootstrap for infobox
@@ -248,8 +244,8 @@ export function clickedLanguage(event) {
 		div_rot_label_header.innerHTML = "Value:";
 		integral_label_header.innerHTML = "Value:";
 		subheader.innerHTML = "A research-based simulation on vector fields: divergence and curl";
-		btn_reset.innerHTML = "Reset all";
-		btn_calc.innerHTML = "Recalculate";
+		btn_reset.innerHTML = "Reset Field";
+		btn_calc.innerHTML = "Recalculate Field";
 		btn_gauss.innerHTML = "Gauss' theorem";
 		btn_stokes.innerHTML = "Stokes' theorem";
 
@@ -315,8 +311,8 @@ export function clickedLanguage(event) {
 		div_rot_label_header.innerHTML = "Wert:";
 		integral_label_header.innerHTML = "Wert:";
 		subheader.innerHTML = "Eine forschungsbasierte Simulation zu Vektorfeldern: Divergenz und Curl";
-		btn_reset.innerHTML = "Zurücksetzen";
-		btn_calc.innerHTML = "Neu berechnen";
+		btn_reset.innerHTML = "Feld Zurücksetzen";
+		btn_calc.innerHTML = "Feld Berechnen";
 
 		btn_gauss.innerHTML = "Satz von Gauss";
 		btn_stokes.innerHTML = "Satz von Stokes";
@@ -479,14 +475,19 @@ export function clickPressField(event) {
 export function resetPage(event) {
 	vector_amount_entry.value = 11;
 	amount_of_vectors = vector_amount_entry.value;
-	x_component_entry.value = "x";
-	y_component_entry.value = "y";
-	partial_x_checkbox.checked = false;
-	partial_y_checkbox.checked = false;
-	projections_checkbox.checked = false;
-	fieldscanner_checkbox.checked = false;
-	paddlewheel_checkbox.checked = false;
-	coordinate_checkbox.checked = false;
+	if (coordinate_system == "cartesian") {
+		x_component_entry.value = "x";
+		y_component_entry.value = "y";
+	} else {
+		x_component_entry.value = "r";
+		y_component_entry.value = "0";	
+	}
+	// partial_x_checkbox.checked = false;
+	// partial_y_checkbox.checked = false;
+	// projections_checkbox.checked = false;
+	// fieldscanner_checkbox.checked = false;
+	// paddlewheel_checkbox.checked = false;
+	// coordinate_checkbox.checked = false;
 	F1 = new Field(
 		x_component_entry.value,
 		y_component_entry.value,
@@ -679,7 +680,7 @@ canvas.addEventListener("click", (event) => {
 
 	// clicking on canvas with fieldscanner ON
 	if (fieldscanner_checkbox.checked) {
-		var field_vector = F1.value_at(p_coord.x, p_coord.y, true);
+		var field_vector = F1.value_at(p_coord.x, p_coord.y);
 		console.log("x:" + p_coord.x + ", y:" + p_coord.y);
 		console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
 		field_vector.x *= F1.norm_factor;
@@ -921,10 +922,9 @@ function set_integral_label() {
 	integral_label.innerHTML = value.toFixed(2) + "±" + error.toFixed(2);
 }
 
-// Animation
 
+// function to animate the paddlewheel (requires fixing, doesn't work properly)
 let animationID;
-
 function animate() {
 	if (paddlewheel_checkbox.checked == false) {
 		return;
@@ -934,11 +934,14 @@ function animate() {
 	redraw_canvas();
 }
 
+
+// 
 function resize() {
-  redraw_canvas();
+  	redraw_canvas();
 }
 
-// Updater
+
+// function to redraw the canvas according to the new settings
 function redraw_canvas() {
 	c.clearRect(0, 0, canvas.width, canvas.height);				// clears everything
 	rect.draw(c);												// draws rectangle (if active)

@@ -60,7 +60,6 @@ export class Coordinatelines {
 
         // Y-Axis
         for (let i = canvas.height / 10; i < canvas.height-10; i += canvas.height / 20 * this.stepsize) {
-            console.log(i, this.canvas_middle);
             // spare the middle coordinate y=0: updated to interval to avoid floating point inaccuracies
             if (i < this.canvas_middle.y - 0.1 || i > this.canvas_middle.y + 0.1) {
                 let p = this.field.transform({ x: i, y: i });

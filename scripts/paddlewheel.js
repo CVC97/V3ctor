@@ -68,7 +68,7 @@ export class Paddlewheel {
    move_to(p,field){
       // Change position based on event
       this.position = p
-      this.speed = field.curl_at(this.position)
+      this.speed = field.curl_at(this.position) / 10
    }
 }
 

@@ -20,8 +20,8 @@ export class Field {
 	p_wheel_partial_y = [];
 	background_color = "white";
 	base_arrow_color = "black";
-
-  	constructor(x, y, canvas, amount_of_vectors, coordinate_system) {
+	
+	constructor(x, y, canvas, amount_of_vectors, coordinate_system) {
 		this.x_component = x;
 		this.y_component = y;
 		this.coordinate_system = coordinate_system;
@@ -39,10 +39,19 @@ export class Field {
 		this.create_vectors();
 		this.normalize_to(this.max_possible_len);
 		// amount of vectors in x and y direction
-  	}
+	}
+	
+	
+	// transformation of canvas coordinates to internal coordinates of the vector field
+	transform(point) {
+		let x = ((point.x - this.canvas_middle.x) / (this.canvas.width / 2)) * 10; /// this.canvas_middle.x;
+		let y = ((this.canvas_middle.y - point.y) / (this.canvas.height / 2)) * 10; /// this.canvas_middle.y;
+		return { x: x, y: y };
+	}
 
+	
 	/// Math operations //
-	value_at(x, y, evaluate_this = false) {
+	value_at(x, y) {
     	let Fx, Fy = 0;
     	if (this.coordinate_system == "cartesian") {
 			// calculation r, phi also in cartesian coordinates
@@ -63,11 +72,6 @@ export class Field {
 			// fixing the negative atan2 output
 			if (phi < 0) {
 				phi = 2*Math.PI + phi;
-			}
-			
-			// log for bugfixing (delete later)
-			if (evaluate_this)  {
-				console.log("r:" + r + ", phi:" + phi);
 			}
 			
 			// evaluate entries to calculate polar vectors
@@ -133,11 +137,11 @@ export class Field {
 	// Creating it now truly beautiful
 	create_vectors() {
 		// rewrote iteration: vectors now placed symmetrical to both axes
-		for (let i = this.canvas_middle.x - this.x_amount_of_vectors/2*this.max_possible_len; i < this.canvas.width; i += this.max_possible_len) {
+		for (let i = this.canvas_middle.x - (this.x_amount_of_vectors-1)/2*this.max_possible_len; i < this.canvas.width; i += this.max_possible_len) {
 			for (let j = this.canvas_middle.y - this.y_amount_of_vectors/2*this.max_possible_len; j < this.canvas.height; j += this.max_possible_len) {
-				var z = this.transform({ x: i, y: j });
-				var v = this.value_at(z.x, z.y);
-        		this.vectors.push({ p: { x: i, y: j }, v: v });
+				var coord = this.transform({ x: i, y: j });									// calculates the internal coordinates for given canvas coordinates i, j
+				var vector = this.value_at(coord.x, coord.y);								// evaluates the internal coordinates for the initialized vector field				
+        		this.vectors.push({ p: { x: i, y: j }, v: vector });						// pushes vector to the list (vectors) with canvas coordinates p (i,j) and internal Field vector v (Fx, Fy, color)
 			}
 		}
   	}
@@ -271,13 +275,5 @@ export class Field {
 		if (this.partial_y_vecs.length == 0) {
 			this.partial_y_vecs = [];
 		}
-	}
-
-
-	transform(point) {
-		let x = ((point.x - this.canvas_middle.x) / (this.canvas.width / 2)) * 10; /// this.canvas_middle.x;
-		let y = ((this.canvas_middle.y - point.y) / (this.canvas.height / 2)) * 10; /// this.canvas_middle.y;
-
-		return { x: x, y: y };
 	}
 }

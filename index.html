@@ -33,6 +33,7 @@
         <script src="./scripts/v3ctor.js" type="module"></script>
         <script type="module">
             import {
+                resetPage,
                 clickPressField,
                 clickedGauss,
                 clickedStokes,
@@ -42,6 +43,7 @@
                 insertPhi_x,
                 insertPhi_y,
             } from "./scripts/v3ctor.js";
+            window.resetPage = resetPage;
             window.clickPressField = clickPressField;
             window.clickedGauss = clickedGauss;
             window.clickedStokes = clickedStokes;
@@ -269,19 +271,19 @@
                                 </div>
                                 <button
                                     class="btn btn-primary"
-                                    id="btn-reset"
+                                    id="btn-recalc"
                                     type="button"
                                     onclick="clickPressField(event)"
                                 >
-                                    Neu berechnen
+                                    Feld Berechnen
                                 </button>
                                 <button
                                     class="btn btn-primary"
-                                    id="btn-recalc"
+                                    id="btn-reset"
                                     type="button"
-                                    onclick="window.location.reload()"
+                                    onclick="resetPage(event)"
                                 >
-                                    Zurücksetzen
+                                    Feld Zurücksetzen
                                 </button>
                             </form>
                         </div>
