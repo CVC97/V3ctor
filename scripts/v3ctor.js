@@ -535,7 +535,7 @@ paddlewheel_checkbox.addEventListener("change", (event) => {
 });
 
 
-// Coordinate checkbox
+// Coordinate System checkbox
 coordinate_checkbox.addEventListener("change", (event) => {
 	if (coordinate_checkbox.checked) {
 		coordinates.active = true;
@@ -718,6 +718,7 @@ var old_startpoint = { x: 0, y: 0 };
 var old_width = 0;
 var old_height = 0;
 
+
 canvas.addEventListener("mousemove", (event) => {
 	// determine the current mouse position when over the canvas
 	const bounding = canvas.getBoundingClientRect();
@@ -728,7 +729,12 @@ canvas.addEventListener("mousemove", (event) => {
 
 	// this is supposed to remove the rectangle for a double click; it in fact works now (to the surprise of everyone)
 	addEventListener("dblclick", (event) => {
+		// ignore double click when outside the rectangle
+		if (state == "outside") {
+			return;
+		}
 		rect.active = false;									// deactivate rectangle
+		console.log(state);
 
 		// projections / vectors
 		F1.rec_vectors = [];									// remove rect projections
