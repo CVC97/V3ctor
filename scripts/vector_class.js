@@ -3,6 +3,7 @@ export class Vector2d {
    x;
    y;
    color;
+   
    constructor(x, y, color = 'white') {
        this.x = x;
        this.y = y;

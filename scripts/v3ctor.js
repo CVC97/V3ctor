@@ -471,10 +471,12 @@ export function clickPressField(event) {
 }
 
 
-// resets the page (currently not in use ?)
+// resets the field entries
 export function resetPage(event) {
+	// restoring the DEFAULT entries for the amount of vectors
 	vector_amount_entry.value = 11;
 	amount_of_vectors = vector_amount_entry.value;
+	// restoring DEFAULT entries for the vector field
 	if (coordinate_system == "cartesian") {
 		x_component_entry.value = "x";
 		y_component_entry.value = "y";
@@ -482,12 +484,7 @@ export function resetPage(event) {
 		x_component_entry.value = "r";
 		y_component_entry.value = "0";	
 	}
-	// partial_x_checkbox.checked = false;
-	// partial_y_checkbox.checked = false;
-	// projections_checkbox.checked = false;
-	// fieldscanner_checkbox.checked = false;
-	// paddlewheel_checkbox.checked = false;
-	// coordinate_checkbox.checked = false;
+	// create a new field according to the default entries
 	F1 = new Field(
 		x_component_entry.value,
 		y_component_entry.value,
@@ -495,6 +492,7 @@ export function resetPage(event) {
 		amount_of_vectors,
 		coordinate_system,
 	);
+	// create new specifics according to the PREVIOUS entries
 	p_wheel = new Paddlewheel();
 	coordinates = new Coordinatelines(canvas, F1);
 	coordinates.field = F1;
@@ -535,6 +533,7 @@ paddlewheel_checkbox.addEventListener("change", (event) => {
 		redraw_canvas();
 	}
 });
+
 
 // Coordinate checkbox
 coordinate_checkbox.addEventListener("change", (event) => {
@@ -681,8 +680,11 @@ canvas.addEventListener("click", (event) => {
 	// clicking on canvas with fieldscanner ON
 	if (fieldscanner_checkbox.checked) {
 		var field_vector = F1.value_at(p_coord.x, p_coord.y);
+		// debugging monitoring with fieldscanner on
 		console.log("x:" + p_coord.x + ", y:" + p_coord.y);
 		console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
+		console.log("Divergence: " + F1.divergence_at(p_coord));
+		console.log("Curl: " + F1.curl_at(p_coord));
 		field_vector.x *= F1.norm_factor;
 		field_vector.y *= F1.norm_factor;
 		field_vector.recalc_len();
@@ -717,6 +719,7 @@ var old_width = 0;
 var old_height = 0;
 
 canvas.addEventListener("mousemove", (event) => {
+	// determine the current mouse position when over the canvas
 	const bounding = canvas.getBoundingClientRect();
 	const p = {
 		x: event.clientX - bounding.left,
@@ -725,7 +728,6 @@ canvas.addEventListener("mousemove", (event) => {
 
 	// this is supposed to remove the rectangle for a double click; it in fact works now (to the surprise of everyone)
 	addEventListener("dblclick", (event) => {
-		console.log("Hi");
 		rect.active = false;									// deactivate rectangle
 
 		// projections / vectors
@@ -745,8 +747,11 @@ canvas.addEventListener("mousemove", (event) => {
 		rect.active = true;										// activates reactange for redraw
 
 		
-	});	
+	});
+
+	// action on canvas when left mouse button PRESSED (and held pressed)
 	if (mouseDown) {
+		// action for fieldscanner OFF
 		if (fieldscanner_checkbox.checked == false) {
 			if (move == 0) {
 				first_clicked_p = {
@@ -757,6 +762,7 @@ canvas.addEventListener("mousemove", (event) => {
 				old_width = rect.width.valueOf();
 				old_height = rect.height.valueOf();
 			}
+
 			// do something with the rect
 			switch (state) {
 				case "inside":
@@ -843,6 +849,8 @@ canvas.addEventListener("mousemove", (event) => {
 			set_integral_label();
 			var middle_coord = F1.transform(rect.middle());
 			set_div_rot_label(middle_coord);
+
+		// action for fieldscanner ON
 		} else {
 			if (move % 10 == 0) {
 				var p_coord = F1.transform(p);
@@ -863,7 +871,10 @@ canvas.addEventListener("mousemove", (event) => {
 		}
 		redraw_canvas();
 		move += 1;
+
+	// over the canvas without left mouse button pressed
 	} else {
+		// determines the state of the position of the curser
 		state = rect.on_outline(p);
 		if (state != false) {
 			document.body.style.cursor = "pointer";
@@ -880,8 +891,8 @@ canvas.addEventListener("mousemove", (event) => {
 	}
 });
 
-// Fieldscanner
 
+// Fieldscanner
 function recalc_fieldscanner_vecs(old_fv) {
 	var new_fieldscann_vecs = [];
 	old_fv.forEach((vec) => {
