@@ -65,7 +65,6 @@ export class Paddlewheel {
 		})
 	}
 
-
 	// updater for the paddlewheel: rotates according to its speed
 	update(c){
 		if (this.visible){
@@ -76,7 +75,8 @@ export class Paddlewheel {
 
 	// moves paddlewheel to the position p, sets rotation speed to the curl at this coordinate position
 	move_to(p, field){
-		let wheel_coordinate = field.transform(p)       			// calculates the paddlewheel coordinate
+		this.position = p;                                          // canvas position fo the paddlewheel (requires transformation)
+		let wheel_coordinate = field.transform(this.position)       // calculates the paddlewheel coordinate
 		this.speed = field.curl_at(wheel_coordinate);               // updates the speed 
 	}
 }
