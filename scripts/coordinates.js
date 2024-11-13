@@ -11,6 +11,7 @@ export class Coordinatelines {
         this.stepsize = stepsize;
         this.x_axis_tick_label_offset_factor = (this.stepsize-2);            // ensures that x-axis starts with -9 for stepsize 1 and with 8 for stepsize 2
     }
+    
 
     draw_euclid(canvas_context){
             // X-Axis:
@@ -173,6 +174,7 @@ export class Coordinatelines {
         canvas_context.stroke()
         canvas_context.restore()
     }
+
 
     draw(canvas_context) {
         if (this.active) {

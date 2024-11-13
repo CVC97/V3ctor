@@ -54,17 +54,9 @@ export class Field {
 	value_at(x, y) {
     	let Fx, Fy = 0;
     	if (this.coordinate_system == "cartesian") {
-			// calculation r, phi also in cartesian coordinates
-			let r = Math.hypot(x, y);
-			let phi = Math.atan2(y, x);														// atan2 output negative for phi > pi
-			// fixing the negative atan2 output
-			if (phi < 0) {
-				phi = 2*Math.PI + phi;
-			}
-
 			// evaluate entries to calculate cartesian vectors
-			Fx = math.evaluate(this.x_component, { x: x, y: y, r: r, φ: phi, phi: phi });
-			Fy = math.evaluate(this.y_component, { x: x, y: y, r: r, φ: phi, phi: phi });
+			Fx = math.evaluate(this.x_component, { x: x, y: y });
+			Fy = math.evaluate(this.y_component, { x: x, y: y });
     	} else if (this.coordinate_system == "polar") {
 			// calculation of r, phi from input
 			let r = Math.hypot(x, y);
@@ -75,8 +67,8 @@ export class Field {
 			}
 			
 			// evaluate entries to calculate polar vectors
-			let Fr = math.evaluate(this.x_component, { x: x, y: y, r: r, φ: phi, phi: phi });
-			let Fphi = math.evaluate(this.y_component, { x: x, y: y, r: r, φ: phi, phi: phi });
+			let Fr = math.evaluate(this.x_component, { r: r, φ: phi, phi: phi });
+			let Fphi = math.evaluate(this.y_component, { r: r, φ: phi, phi: phi });
 			Fx = Fr * Math.cos(phi) - Fphi * Math.sin(phi);
 			Fy = Fr * Math.sin(phi) + Fphi * Math.cos(phi);
     	}

@@ -493,10 +493,25 @@ export function resetPage(event) {
 		coordinate_system,
 	);
 	// create new specifics according to the PREVIOUS entries
+	let cooordinates_active = coordinates.active;
+	let coordinates_stepsize = coordinates.stepsize;
+	let coordinates_type = coordinates.type;
+
 	p_wheel = new Paddlewheel();
-	coordinates = new Coordinatelines(canvas, F1);
+	coordinates = new Coordinatelines(canvas, F1, coordinates_stepsize);
+	coordinates.active = cooordinates_active;
+	coordinates.type = coordinates_type;
 	coordinates.field = F1;
 	rect = new Rectangle(F1);
+
+	// untick field specific boxes
+	fieldscanner_checkbox.checked = false;
+	partial_x_checkbox.checked = false;
+	partial_y_checkbox.checked = false;
+	partial_r_checkbox.checked = false;
+	partial_phi_checkbox.checked = false;
+	paddlewheel_checkbox.checked = false;
+	projections_checkbox.checked = false;
 
 	div_rot_label.innerHTML = " ";
 	set_integral_label();
@@ -708,9 +723,9 @@ canvas.addEventListener("click", (event) => {
 			rect.draw_line_vectores();
 		}
 	}
-
 	redraw_canvas();
 });
+
 
 // When mouse moves over canvas:
 var state = "outside";
@@ -729,7 +744,7 @@ canvas.addEventListener("mousemove", (event) => {
 
 	// this is supposed to remove the rectangle for a double click; it in fact works now (to the surprise of everyone)
 	addEventListener("dblclick", (event) => {
-		// ignore double click when outside the rectangle
+		// ignore double click when outside the rectangle (double click is NOT supposed to trigger when using buttons)
 		if (state == "outside") {
 			return;
 		}
@@ -742,9 +757,11 @@ canvas.addEventListener("mousemove", (event) => {
 		F1.add_partial_y_vectors([]);							// remove partial y vectors
 
 		// untick projection / vector checkboxes
-		projections_checkbox.checked = false
-		partial_x_checkbox.checked = false
-		partial_y_checkbox.checked = false
+		projections_checkbox.checked = false;
+		partial_x_checkbox.checked = false;
+		partial_y_checkbox.checked = false;
+		partial_r_checkbox.checked = false;
+		partial_phi_checkbox.checked = false;
 
 		redraw_canvas();										// redraws canvas without rectangle (which is deactivated)
 
