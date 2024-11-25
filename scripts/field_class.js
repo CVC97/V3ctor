@@ -18,6 +18,8 @@ export class Field {
 	partial_phi_vecs = [];
 	p_wheel_partial_x = [];
 	p_wheel_partial_y = [];
+	p_wheel_partial_r = [];
+	p_wheel_partial_phi = [];
 	background_color = "white";
 	base_arrow_color = "black";
 	
@@ -179,6 +181,18 @@ export class Field {
 			v.y *= this.norm_factor;
 			v.recalc_len();
     	});
+    	this.partial_r_vecs.forEach((p_and_v) => {
+			var v = p_and_v.v;
+			v.x *= this.norm_factor;
+			v.y *= this.norm_factor;
+			v.recalc_len();
+    	});
+    	this.partial_phi_vecs.forEach((p_and_v) => {
+			var v = p_and_v.v;
+			v.x *= this.norm_factor;
+			v.y *= this.norm_factor;
+			v.recalc_len();
+    	});
     	this.p_wheel_partial_x.forEach((p_and_v) => {
 			var v = p_and_v.v;
 			v.x *= this.norm_factor;
@@ -186,6 +200,18 @@ export class Field {
 			v.recalc_len();
     	});
     	this.p_wheel_partial_y.forEach((p_and_v) => {
+			var v = p_and_v.v;
+			v.x *= this.norm_factor;
+			v.y *= this.norm_factor;
+			v.recalc_len();
+    	});
+    	this.p_wheel_partial_r.forEach((p_and_v) => {
+			var v = p_and_v.v;
+			v.x *= this.norm_factor;
+			v.y *= this.norm_factor;
+			v.recalc_len();
+    	});
+    	this.p_wheel_partial_phi.forEach((p_and_v) => {
 			var v = p_and_v.v;
 			v.x *= this.norm_factor;
 			v.y *= this.norm_factor;
@@ -221,6 +247,20 @@ export class Field {
 				v.draw_at(p, canvas_context);
 			});
     	}
+    	if (this.partial_r_vecs.length != 0) {
+			this.partial_r_vecs.forEach((p_and_v) => {
+				var p = p_and_v.p;
+				var v = p_and_v.v;
+				v.draw_at(p, canvas_context);
+      		});
+    	}
+    	if (this.partial_phi_vecs.length != 0) {
+			this.partial_phi_vecs.forEach((p_and_v) => {
+				var p = p_and_v.p;
+				var v = p_and_v.v;
+				v.draw_at(p, canvas_context);
+			});
+    	}
 		if (this.fieldscanner_vectors.length != 0) {
 			this.fieldscanner_vectors.forEach((p_and_v) => {
 				var p = p_and_v.p;
@@ -237,6 +277,20 @@ export class Field {
 		}
 		if (this.p_wheel_partial_y.length != 0) {
 			this.p_wheel_partial_y.forEach((p_and_v) => {
+				var p = p_and_v.p;
+				var v = p_and_v.v;
+				v.draw_at(p, canvas_context);
+			});
+		}
+		if (this.p_wheel_partial_r.length != 0) {
+			this.p_wheel_partial_r.forEach((p_and_v) => {
+				var p = p_and_v.p;
+				var v = p_and_v.v;
+				v.draw_at(p, canvas_context);
+			});
+		}
+		if (this.p_wheel_partial_phi.length != 0) {
+			this.p_wheel_partial_phi.forEach((p_and_v) => {
 				var p = p_and_v.p;
 				var v = p_and_v.v;
 				v.draw_at(p, canvas_context);
@@ -267,6 +321,56 @@ export class Field {
 		});
 		if (this.partial_y_vecs.length == 0) {
 			this.partial_y_vecs = [];
+		}
+	}
+
+
+	// method to fill the list of partial x-vectors
+	add_partial_r_vectors(list) {
+		this.partial_r_vecs.splice(0, this.partial_r_vecs.length);
+		list.forEach((p_and_v) => {
+			// calculate the vector starting position in internal coordinates
+			let vector_start = this.transform(p_and_v.p)
+			// calculate angle using point x, y
+			let p_phi = Math.atan2(vector_start.y, vector_start.x);							// atan2 output negative for phi > pi
+			// fixing the negative atan2 output
+			if (p_phi < 0) {
+				p_phi = 2*Math.PI + p_phi;
+			}
+			// calculate length of r-component vector using x-, y-component of the vector
+			let r_len = p_and_v.v.x*Math.cos(p_phi) + p_and_v.v.y*Math.sin(p_phi);
+
+			// calculate r component in terms of x and y and create new r-component vector
+			var v = new Vector2d(r_len*Math.cos(p_phi), r_len*Math.sin(p_phi), "red");																		
+			this.partial_r_vecs.push({ p: p_and_v.p, v: v });
+		});
+		if (this.partial_r_vecs.length == 0) {
+			this.partial_r_vecs = [];
+		}
+	}
+
+
+	// method to fill the list of partial x-vectors
+	add_partial_phi_vectors(list) {
+		this.partial_phi_vecs.splice(0, this.partial_phi_vecs.length);
+		list.forEach((p_and_v) => {
+			// calculate the vector starting position in internal coordinates
+			let vector_start = this.transform(p_and_v.p)
+			// calculate angle using point x, y
+			let p_phi = Math.atan2(vector_start.y, vector_start.x);							// atan2 output negative for phi > pi
+			// fixing the negative atan2 output
+			if (p_phi < 0) {
+				p_phi = 2*Math.PI + p_phi;
+			}
+
+			// calculate length of phi-component using vector x, y
+			let phi_len = -p_and_v.v.x*Math.sin(p_phi) + p_and_v.v.y*Math.cos(p_phi);		// atan2 output negative for phi > pi
+			// calculate phi component in terms of x and y and create new phi-component vector
+			var v = new Vector2d(-phi_len*Math.sin(p_phi), phi_len*Math.cos(p_phi), "green");
+			this.partial_phi_vecs.push({ p: p_and_v.p, v: v });
+		});
+		if (this.partial_phi_vecs.length == 0) {
+			this.partial_phi_vecs = [];
 		}
 	}
 }

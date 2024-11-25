@@ -237,6 +237,8 @@ export function clickedLanguage(event) {
 		fieldscanner_checkbox_label.innerHTML = "Scan field";
 		partial_x_checkbox_label.innerHTML = "Show x component";
 		partial_y_checkbox_label.innerHTML = "Show y component";
+		partial_r_checkbox_label.innerHTML = "Show r component";
+		partial_phi_checkbox_label.innerHTML = "Show angle component φ";
 		div_rot_header.innerHTML = "Divergence";
 		flux_header.innerHTML = "Flux through area";
 		projection_label.innerHTML = "Show projection on the outer normal of the rectangle curve";
@@ -244,8 +246,8 @@ export function clickedLanguage(event) {
 		div_rot_label_header.innerHTML = "Value:";
 		integral_label_header.innerHTML = "Value:";
 		subheader.innerHTML = "A research-based simulation on vector fields: divergence and curl";
-		btn_reset.innerHTML = "Reset Field";
-		btn_calc.innerHTML = "Recalculate Field";
+		btn_reset.innerHTML = "Reset field";
+		btn_calc.innerHTML = "Recalculate field";
 		btn_gauss.innerHTML = "Gauss' theorem";
 		btn_stokes.innerHTML = "Stokes' theorem";
 
@@ -286,6 +288,8 @@ export function clickedLanguage(event) {
 		fieldscanner_checkbox_label.innerHTML = "Feld abtasten";
 		partial_x_checkbox_label.innerHTML = "x-Komponente anzeigen";
 		partial_y_checkbox_label.innerHTML = "y-Komponente anzeigen";
+		partial_r_checkbox_label.innerHTML = "r-Komponente anzeigen";
+		partial_phi_checkbox_label.innerHTML = "φ-Komponente anzeigen";
 
 		if (theorem == "gauss") {
 			div_rot_header.innerHTML = "Divergenz";
@@ -311,8 +315,8 @@ export function clickedLanguage(event) {
 		div_rot_label_header.innerHTML = "Wert:";
 		integral_label_header.innerHTML = "Wert:";
 		subheader.innerHTML = "Eine forschungsbasierte Simulation zu Vektorfeldern: Divergenz und Curl";
-		btn_reset.innerHTML = "Feld Zurücksetzen";
-		btn_calc.innerHTML = "Feld Berechnen";
+		btn_reset.innerHTML = "Feld zurücksetzen";
+		btn_calc.innerHTML = "Feld berechnen";
 
 		btn_gauss.innerHTML = "Satz von Gauss";
 		btn_stokes.innerHTML = "Satz von Stokes";
@@ -375,6 +379,12 @@ export function clickedGauss(event) {
 	}
 	if (partial_y_checkbox.checked) {
 		F1.add_partial_y_vectors(rect.vecs_in_rect);
+	}
+	if (partial_r_checkbox.checked) {
+		F1.add_partial_r_vectors(rect.vecs_in_rect);
+	}
+	if (partial_phi_checkbox.checked) {
+		F1.add_partial_phi_vectors(rect.vecs_in_rect);
 	}
 	if (projections_checkbox.checked) {
 		rect.draw_surface_vektores();
@@ -455,6 +465,16 @@ export function clickPressField(event) {
 				rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel).concat(F1.fieldscanner_vectors),
 			);
 		}
+		if (partial_r_checkbox.checked) {
+			F1.add_partial_r_vectors(
+				rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel).concat(F1.fieldscanner_vectors),
+			);
+		}
+		if (partial_phi_checkbox.checked) {
+			F1.add_partial_phi_vectors(
+				rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel).concat(F1.fieldscanner_vectors),
+			);
+		}
 		if (projections_checkbox.checked) {
 			if (theorem == "gauss") {
 				rect.draw_surface_vektores();
@@ -532,6 +552,12 @@ paddlewheel_checkbox.addEventListener("change", (event) => {
 		if (partial_y_checkbox.checked) {
 			F1.add_partial_y_vectors(p_wheel.vecs_near_wheel);
 		}
+		if (partial_r_checkbox.checked) {
+			F1.add_partial_r_vectors(p_wheel.vecs_near_wheel);
+		}
+		if (partial_phi_checkbox.checked) {
+			F1.add_partial_phi_vectors(p_wheel.vecs_near_wheel);
+		}
 		p_wheel.draw(c);
 		animate();
 	} else {
@@ -544,6 +570,12 @@ paddlewheel_checkbox.addEventListener("change", (event) => {
 		}
 		if (partial_y_checkbox.checked) {
 			F1.add_partial_y_vectors(rect.vecs_in_rect);
+		}
+		if (partial_r_checkbox.checked) {
+			F1.add_partial_r_vectors(rect.vecs_in_rect);
+		}
+		if (partial_phi_checkbox.checked) {
+			F1.add_partial_phi_vectors(rect.vecs_in_rect);
 		}
 		redraw_canvas();
 	}
@@ -593,6 +625,8 @@ fieldscanner_checkbox.addEventListener("change", (event) => {
 		F1.rec_vectors = [];
 		F1.partial_x_vecs = [];
 		F1.partial_y_vecs = [];
+		F1.partial_r_vecs = [];
+		F1.partial_phi_vecs = [];
 		rect.startpoint = { x: 0, y: 0 };
 		rect.vecs_in_rect = [];
 		p_wheel.vecs_near_wheel = [];
@@ -602,6 +636,8 @@ fieldscanner_checkbox.addEventListener("change", (event) => {
 		F1.rec_vectors = [];
 		F1.partial_x_vecs = [];
 		F1.partial_y_vecs = [];
+		F1.partial_r_vecs = [];
+		F1.partial_phi_vecs = [];
 	}
 	redraw_canvas();
 });
@@ -627,10 +663,10 @@ projections_checkbox.addEventListener("change", (event) => {
 partial_x_checkbox.addEventListener("change", (event) => {
 	if (partial_x_checkbox.checked) {
 		F1.add_partial_x_vectors(
-		rect.vecs_in_rect
-			.concat(p_wheel.vecs_near_wheel)
-			.concat(F1.fieldscanner_vectors),
-		);
+			rect.vecs_in_rect
+				.concat(p_wheel.vecs_near_wheel)
+				.concat(F1.fieldscanner_vectors),
+			);
 	} else {
 		F1.add_partial_x_vectors([]);
 	}
@@ -641,42 +677,43 @@ partial_x_checkbox.addEventListener("change", (event) => {
 partial_y_checkbox.addEventListener("change", (event) => {
 	if (partial_y_checkbox.checked) {
 		F1.add_partial_y_vectors(
-		rect.vecs_in_rect
-			.concat(p_wheel.vecs_near_wheel)
-			.concat(F1.fieldscanner_vectors),
-		);
+			rect.vecs_in_rect
+				.concat(p_wheel.vecs_near_wheel)
+				.concat(F1.fieldscanner_vectors),
+			);
 	} else {
 		F1.add_partial_y_vectors([]);
 	}
 	redraw_canvas();
 });
 
-// partial_r_checkbox.addEventListener("change", (event) => {
-// 	if (partial_r_checkbox.checked) {
-// 		F1.add_partial_r_vectors(
-// 		rect.vecs_in_rect
-// 			.concat(p_wheel.vecs_near_wheel)
-// 			.concat(F1.fieldscanner_vectors),
-// 		);
-// 	} else {
-// 		F1.add_partial_r_vectors([]);
-// 	}
-// 	redraw_canvas();
-// });
+
+partial_r_checkbox.addEventListener("change", (event) => {
+	if (partial_r_checkbox.checked) {
+		F1.add_partial_r_vectors(
+			rect.vecs_in_rect
+				.concat(p_wheel.vecs_near_wheel)
+				.concat(F1.fieldscanner_vectors),
+			);
+	} else {
+		F1.add_partial_r_vectors([]);
+	}
+	redraw_canvas();
+});
 
 
-// partial_phi_checkbox.addEventListener("change", (event) => {
-// 	if (partial_phi_checkbox.checked) {
-// 		F1.add_partial_phi_vectors(
-// 		rect.vecs_in_rect
-// 			.concat(p_wheel.vecs_near_wheel)
-// 			.concat(F1.fieldscanner_vectors),
-// 		);
-// 	} else {
-// 		F1.add_partial_phi_vectors([]);
-// 	}
-// 	redraw_canvas();
-// });
+partial_phi_checkbox.addEventListener("change", (event) => {
+	if (partial_phi_checkbox.checked) {
+		F1.add_partial_phi_vectors(
+			rect.vecs_in_rect
+				.concat(p_wheel.vecs_near_wheel)
+				.concat(F1.fieldscanner_vectors),
+		);
+	} else {
+		F1.add_partial_phi_vectors([]);
+	}
+	redraw_canvas();
+});
 
 
 //// Interactivity Handling on Canvas ////
@@ -696,10 +733,10 @@ canvas.addEventListener("click", (event) => {
 	if (fieldscanner_checkbox.checked) {
 		var field_vector = F1.value_at(p_coord.x, p_coord.y);
 		// debugging monitoring with fieldscanner on
-		console.log("x:" + p_coord.x + ", y:" + p_coord.y);
-		console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
-		console.log("Divergence: " + F1.divergence_at(p_coord));
-		console.log("Curl: " + F1.curl_at(p_coord));
+		// console.log("x:" + p_coord.x + ", y:" + p_coord.y);
+		// console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
+		// console.log("Divergence: " + F1.divergence_at(p_coord));
+		// console.log("Curl: " + F1.curl_at(p_coord));
 		field_vector.x *= F1.norm_factor;
 		field_vector.y *= F1.norm_factor;
 		field_vector.recalc_len();
@@ -712,6 +749,14 @@ canvas.addEventListener("click", (event) => {
 		// partial y-vectors are displayed
 		if (partial_y_checkbox.checked) {
 			F1.add_partial_y_vectors(F1.fieldscanner_vectors);
+		}
+		// partial r-vectors are displyed
+		if (partial_r_checkbox.checked) {
+			F1.add_partial_r_vectors(F1.fieldscanner_vectors);
+		}
+		// partial phi-vectors are displayed
+		if (partial_phi_checkbox.checked) {
+			F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
 		}
 	}
 
@@ -755,6 +800,8 @@ canvas.addEventListener("mousemove", (event) => {
 		F1.rec_vectors = [];									// remove rect projections
 		F1.add_partial_x_vectors([]);							// remove partial x vectors
 		F1.add_partial_y_vectors([]);							// remove partial y vectors
+		F1.add_partial_r_vectors([]);							// remove partial r vectors
+		F1.add_partial_phi_vectors([]);							// remove partial phi vectors
 
 		// untick projection / vector checkboxes
 		projections_checkbox.checked = false;
@@ -869,6 +916,16 @@ canvas.addEventListener("mousemove", (event) => {
 					rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel),
 				);
 			}
+			if (partial_r_checkbox.checked) {
+				F1.add_partial_r_vectors(
+					rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel),
+				);
+			}
+			if (partial_phi_checkbox.checked) {
+				F1.add_partial_phi_vectors(
+					rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel),
+				);
+			}
 			set_integral_label();
 			var middle_coord = F1.transform(rect.middle());
 			set_div_rot_label(middle_coord);
@@ -889,6 +946,12 @@ canvas.addEventListener("mousemove", (event) => {
 				}
 				if (partial_y_checkbox.checked) {
 					F1.add_partial_y_vectors(F1.fieldscanner_vectors);
+				}
+				if (partial_r_checkbox.checked) {
+					F1.add_partial_r_vectors(F1.fieldscanner_vectors);
+				}
+				if (partial_phi_checkbox.checked) {
+					F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
 				}
 			}
 		}
