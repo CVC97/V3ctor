@@ -341,7 +341,7 @@ export class Field {
 			let r_len = p_and_v.v.x*Math.cos(p_phi) + p_and_v.v.y*Math.sin(p_phi);
 
 			// calculate r component in terms of x and y and create new r-component vector
-			var v = new Vector2d(r_len*Math.cos(p_phi), r_len*Math.sin(p_phi), "red");																		
+			var v = new Vector2d(r_len*Math.cos(p_phi), r_len*Math.sin(p_phi), "#6495ED");																		
 			this.partial_r_vecs.push({ p: p_and_v.p, v: v });
 		});
 		if (this.partial_r_vecs.length == 0) {
@@ -366,7 +366,7 @@ export class Field {
 			// calculate length of phi-component using vector x, y
 			let phi_len = -p_and_v.v.x*Math.sin(p_phi) + p_and_v.v.y*Math.cos(p_phi);		// atan2 output negative for phi > pi
 			// calculate phi component in terms of x and y and create new phi-component vector
-			var v = new Vector2d(-phi_len*Math.sin(p_phi), phi_len*Math.cos(p_phi), "green");
+			var v = new Vector2d(-phi_len*Math.sin(p_phi), phi_len*Math.cos(p_phi), "#FF7F50");
 			this.partial_phi_vecs.push({ p: p_and_v.p, v: v });
 		});
 		if (this.partial_phi_vecs.length == 0) {
