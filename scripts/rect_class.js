@@ -16,6 +16,12 @@ export class Rectangle {
     flux_top = 0;
     flux_bottom = 0;
 
+    // circulation components
+    circulation_left = 0;
+    circulation_right = 0;
+    circulation_top = 0;
+    circulation_bottom = 0;
+
 
     constructor(field) {
         this.active = true;
@@ -108,19 +114,22 @@ export class Rectangle {
     }
 
 
-    circulation(){
+    circulation() {
         const ordered_coords = this.ordered_ccords()
         const coord_0 = this.field.transform( {x: ordered_coords.x_0, y: ordered_coords.y_0} )
         const coord_1 = this.field.transform( {x: ordered_coords.x_1, y: ordered_coords.y_1} )
+
+        // rectangle boundaries
         const x0 = coord_0.x
         const x1 = coord_1.x
         const y0 = coord_0.y
         const y1 = coord_1.y
 
-        var n_top = new Vector2d(-1,0)
-        var n_bottom = new Vector2d(1,0)
-        var n_left = new Vector2d(0,-1)
-        var n_right = new Vector2d(0,1)
+        // rectangle tangent vectors
+        var t_top = new Vector2d(-1, 0)
+        var t_bottom = new Vector2d(1, 0)
+        var t_left = new Vector2d(0, -1)
+        var t_right = new Vector2d(0, 1)
 
         var value = 0
         var precison = 200
@@ -128,20 +137,26 @@ export class Rectangle {
         var perimeter = 2*(x1-x0) + 2*(y0-y1)
         var max_riemann_error = 0
 
-        for (var i=x0; i<x1; i+= (x1-x0)/precison) {
-            value += this.field.value_at(i, y0).scalar(n_top)
-            value += this.field.value_at(i, y1).scalar(n_bottom)
+        // reset flux components lol
+        this.circulation_left = 0;
+        this.circulation_right = 0;
+        this.circulation_top = 0;
+        this.circulation_bottom = 0;
+
+        for (var i = x0; i < x1; i += (x1-x0)/precison) {
+            this.circulation_top += this.field.value_at(i, y0).scalar(t_top)
+            this.circulation_bottom += this.field.value_at(i, y1).scalar(t_bottom)
         }
         for (var i=y1; i<y0; i+= (y0-y1)/precison) {
-            value += this.field.value_at(x0, i).scalar(n_left)
-            value += this.field.value_at(x1, i).scalar(n_right)
+            this.circulation_left += this.field.value_at(x0, i).scalar(t_left)
+            this.circulation_right += this.field.value_at(x1, i).scalar(t_right)
         }
 
         /// Error Calculations
-        max_riemann_error += Math.abs((this.field.value_at(x1,y0).scalar(n_top) - this.field.value_at(x0,y0).scalar(n_top)) * (x1-x0)/precison)
-        max_riemann_error += Math.abs((this.field.value_at(x1,y1).scalar(n_bottom) - this.field.value_at(x0,y1).scalar(n_bottom)) * (x1-x0)/precison)
-        max_riemann_error += Math.abs((this.field.value_at(y1,x0).scalar(n_left) - this.field.value_at(y0,x0).scalar(n_left)) * (y1-y0)/precison)
-        max_riemann_error += Math.abs((this.field.value_at(y1,x1).scalar(n_right) - this.field.value_at(y0,x1).scalar(n_right)) * (y1-y0)/precison)
+        max_riemann_error += Math.abs((this.field.value_at(x1,y0).scalar(t_top) - this.field.value_at(x0,y0).scalar(t_top)) * (x1-x0)/precison)
+        max_riemann_error += Math.abs((this.field.value_at(x1,y1).scalar(t_bottom) - this.field.value_at(x0,y1).scalar(t_bottom)) * (x1-x0)/precison)
+        max_riemann_error += Math.abs((this.field.value_at(y1,x0).scalar(t_left) - this.field.value_at(y0,x0).scalar(t_left)) * (y1-y0)/precison)
+        max_riemann_error += Math.abs((this.field.value_at(y1,x1).scalar(t_right) - this.field.value_at(y0,x1).scalar(t_right)) * (y1-y0)/precison)
 
         value = value / (4*precison) * perimeter
         return { value: value, error: max_riemann_error }
@@ -237,10 +252,10 @@ export class Rectangle {
         let y0 = rec_cords.y_0                                                  // top rectangle border
         let y1 = rec_cords.y_1                                                  // down rectangle border
         let flux_tolerance = 2;                                               // value by within which top-bottom flux difference is considered as vashished
-        console.log("Flux Left:" + this.flux_left);
-        console.log("Flux Right:" + this.flux_right);
-        console.log("Flux Top:" + this.flux_top);
-        console.log("Flux Bottom:" + this.flux_bottom);
+        // console.log("Flux Left:" + this.flux_left);
+        // console.log("Flux Right:" + this.flux_right);
+        // console.log("Flux Top:" + this.flux_top);
+        // console.log("Flux Bottom:" + this.flux_bottom);
         let light_red = "#F67280";
         let light_green = "#77DD77";
 
@@ -263,7 +278,6 @@ export class Rectangle {
                 else {
                     v_top.color = light_red;
                 }    
-                console.log("LR-Flux vanishes top-bottom.")
             } else {
                 // "pure" colors
                 if (v_top.y > 0) {
@@ -323,7 +337,6 @@ export class Rectangle {
                 else {
                     v_left.color = light_red;
                 }    
-                console.log("LR-Flux vanishes left-right.")
             } else {
                 // "pure" colors
                 if (v_left.x < 0) {
@@ -378,6 +391,14 @@ export class Rectangle {
         let x1 = rec_cords.x_1
         let y0 = rec_cords.y_0
         let y1 = rec_cords.y_1
+        let circulation_tolerance = 10;                                               // value by within which top-bottom flux difference is considered as vashished
+        console.log("Circulation Left:" + this.circulation_left);
+        console.log("Circulation Right:" + this.circulation_right);
+        console.log("Circulation Top:" + this.circulation_top);
+        console.log("Circulation Bottom:" + this.circulation_bottom);
+        let light_red = "#F67280";
+        let light_green = "#77DD77";
+
         // horizontal edges
         for (var i = x0; i <= x1 ; i += this.field.max_possible_len/2) {
             // Upper edge
@@ -387,11 +408,21 @@ export class Rectangle {
             v_top.x *= this.field.norm_factor;
             v_top.y *= 0;
             v_top.recalc_len()
-            if (v_top.x > 0) {
-                v_top.color = 'red';
-            }
-            else {
-                v_top.color = 'green';
+            // check if top-bottom circulation vanishes
+            if (Math.abs(this.circulation_top+this.circulation_bottom) < circulation_tolerance) {
+                if (v_top.x < 0) {
+                    v_top.color = light_green;
+                }
+                else {
+                    v_top.color = light_red;
+                }           
+            } else {
+                if (v_top.x < 0) {
+                    v_top.color = 'green';
+                }
+                else {
+                    v_top.color = 'red';
+                }
             }
             this.field.rec_vectors.push({ p: p_top_canvas, v: v_top });
             // lower edge
@@ -401,11 +432,21 @@ export class Rectangle {
             v_bottom.x *= this.field.norm_factor;
             v_bottom.y *= 0;
             v_bottom.recalc_len()
-            if (v_bottom.x > 0) {
-                v_bottom.color = 'green';
-            }
-            else {
-                v_bottom.color = 'red';
+            // check if top-bottom circulation vanishes
+            if (Math.abs(this.circulation_top+this.circulation_bottom) < circulation_tolerance) {
+                if (v_bottom.x > 0) {
+                    v_bottom.color = light_green;
+                }
+                else {
+                    v_bottom.color = light_red;
+                }
+            } else {
+                if (v_bottom.x > 0) {
+                    v_bottom.color = 'green';
+                }
+                else {
+                    v_bottom.color = 'red';
+                }
             }
             this.field.rec_vectors.push({ p: p_bottom_canvas, v: v_bottom });
         }
@@ -418,11 +459,21 @@ export class Rectangle {
             v_left.x *= 0;
             v_left.y *= this.field.norm_factor;
             v_left.recalc_len()
-            if (v_left.y > 0) {
-                v_left.color = 'red';
-            }
-            else {
-                v_left.color = 'green';
+            // check if left-right circulation vanishes
+            if (Math.abs(this.circulation_left+this.circulation_right) < circulation_tolerance) {
+                if (v_left.y < 0) {
+                    v_left.color = light_green;
+                }
+                else {
+                    v_left.color = light_red;
+                }            
+            } else {
+                if (v_left.y < 0) {
+                    v_left.color = 'green';
+                }
+                else {
+                    v_left.color = 'red';
+                }
             }
             this.field.rec_vectors.push({ p: p_left_canvas, v: v_left });
             // right edge
@@ -432,11 +483,21 @@ export class Rectangle {
             v_right.x *= 0;
             v_right.y *= this.field.norm_factor;
             v_right.recalc_len()
-            if (v_right.y > 0) {
-                v_right.color = 'green';
-            }
-            else {
-                v_right.color = 'red';
+            // check if left-right circulation vanishes
+            if (Math.abs(this.circulation_left+this.circulation_right) < circulation_tolerance) {
+                if (v_right.y > 0) {
+                    v_right.color = light_green;
+                }
+                else {
+                    v_right.color = light_red;
+                }
+            } else {
+                if (v_right.y > 0) {
+                    v_right.color = 'green';
+                }
+                else {
+                    v_right.color = 'red';
+                }
             }
             this.field.rec_vectors.push({ p: p_right_canvas, v: v_right });
         }
