@@ -4,22 +4,29 @@ export class Vector2d {
    y;
    color;
    
-   constructor(x, y, color = 'white') {
+
+   constructor(x, y, color = 'white', opacity = 1) {
        this.x = x;
        this.y = y;
        this.color = color;
        this.len = Math.sqrt(this.x * this.x + this.y * this.y);
    }
+
+
    add(other) {
        return new Vector2d(this.x + other.x, this.y + other.y);
    }
+
+
    scalar(other) {
        return this.x * other.x + this.y * other.y;
    }
 
+
    recalc_len(){
-    this.len = Math.sqrt(this.x * this.x + this.y * this.y);
+        this.len = Math.sqrt(this.x * this.x + this.y * this.y);
    }
+
 
    draw_at(p, canvas_context) {
        if (this.len < 0.25) {

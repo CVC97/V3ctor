@@ -23,6 +23,7 @@ export class Field {
 	background_color = "white";
 	base_arrow_color = "black";
 	
+	
 	constructor(x, y, canvas, amount_of_vectors, coordinate_system) {
 		this.x_component = x;
 		this.y_component = y;
