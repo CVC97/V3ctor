@@ -43,7 +43,7 @@ let info_text =
   "Halte die Maus über den einzelnen Elementen still, um mehr über sie zu erfahren.";
 
 let icon_text =
-  "Die Applikation wurde an der Fakultät für Physik der Universität Göttingen in der Didaktik der Physik (Prof. Dr. Pascal Klein) für Lehrzwecke entwickelt. Kontakt für Feedback und Fragen: Simon Blaue, Larissa Hahn (larissa.hahn@uni-goettingen.de).";
+  "Die Applikation wurde an der Fakultät für Physik der Universität Göttingen in der Didaktik der Physik (Prof. Dr. Pascal Klein) für Lehrzwecke entwickelt. Kontakt für Feedback und Fragen: Simon Blaue, Carlo von Carnap, Larissa Hahn (larissa.hahn@uni-goettingen.de).";
 
 let theorem_text =
   "Wähle zwischen den Theoremen, um zwischen Divergenz und Rotation zu wechseln.";
