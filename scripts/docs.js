@@ -231,7 +231,7 @@ export function switch_language(old_lang, theorem, coords) {
       "To learn more about the features and elements of the simulation, hold your mouse still over them. ";
 
     icon_text =
-      "The application was developed by the Physics Education Research Group (Prof. Dr. Pascal Klein) at the University of Göttingen (Faculty of Physics) for teaching purposes. Contact for feedback and questions: Simon Blaue, Larissa Hahn (larissa.hahn@uni-goettingen.de).";
+      "The application was developed by the Physics Education Research Group (Prof. Dr. Pascal Klein) at the University of Göttingen (Faculty of Physics) for teaching purposes. Contact for feedback and questions: Simon Blaue, Carlo von Carnap, Larissa Hahn (larissa.hahn@uni-goettingen.de).";
 
     theorem_text =
       "Choose an integral theorem to switch between divergence and curl.";
@@ -289,7 +289,7 @@ export function switch_language(old_lang, theorem, coords) {
       "Halte die Maus über den einzelnen Elementen still, um mehr über sie zu erfahren.";
 
     icon_text =
-      "Die Applikation wurde an der Fakultät für Physik der Universität Göttingen in der Didaktik der Physik (Prof. Dr. Pascal Klein) für Lehrzwecke entwickelt. Kontakt für Feedback und Fragen: Simon Blaue, Larissa Hahn (larissa.hahn@uni-goettingen.de).";
+      "Die Applikation wurde an der Fakultät für Physik der Universität Göttingen in der Didaktik der Physik (Prof. Dr. Pascal Klein) für Lehrzwecke entwickelt. Kontakt für Feedback und Fragen: Simon Blaue, Carlo von Carnap, Larissa Hahn (larissa.hahn@uni-goettingen.de).";
 
     theorem_text =
       "Wähle zwischen den Theoremen, um zwischen Divergenz und Rotation zu wechseln.";
