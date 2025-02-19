@@ -27,6 +27,20 @@ export class Field {
 	constructor(x, y, canvas, amount_of_vectors, coordinate_system) {
 		this.x_component = x;
 		this.y_component = y;
+
+		// modify the expressions for x and y component for certain motifs (don't question what I am doing here, it works)
+		// console.log("x-component string pre: " + this.x_component);
+		// console.log("y-component string pre: " + this.y_component);			
+
+		this.x_component = this.x_component.replace("x^2", "x^2+0.00001");
+		this.y_component = this.y_component.replace("x^2", "x^2+0.00001");
+
+		this.x_component = this.x_component.replace("y^2", "y^2+0.00001");
+		this.y_component = this.y_component.replace("y^2", "y^2+0.00001");
+
+		// console.log("x-component string post: " + this.x_component);
+		// console.log("y-component string post: " + this.y_component);
+
 		this.coordinate_system = coordinate_system;
 		this.canvas = canvas;
 		// this is actually smart: ensures that vectors are not overlapping

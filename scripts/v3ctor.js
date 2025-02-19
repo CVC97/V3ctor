@@ -734,7 +734,8 @@ canvas.addEventListener("click", (event) => {
 		var field_vector = F1.value_at(p_coord.x, p_coord.y);
 		// debugging monitoring with fieldscanner on
 		// console.log("x:" + p_coord.x + ", y:" + p_coord.y);
-		// console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
+		console.log("Fx:" + field_vector.x + ", Fy:" + field_vector.y);
+		console.log("F_len:" + field_vector.len);
 		// console.log("Divergence: " + F1.divergence_at(p_coord));
 		// console.log("Curl: " + F1.curl_at(p_coord));
 		field_vector.x *= F1.norm_factor;
