@@ -104,7 +104,7 @@ export class Field {
 				diff_Fx_x.evaluate({ x: p.x, y: p.y }) +
 				diff_Fy_y.evaluate({ x: p.x, y: p.y });
     	} else if ((this.coordinate_system = "polar")) {
-			var diff_Fx_x = math.derivative("r*" + expr_x, "r");
+			var diff_Fx_x = math.derivative("r*(" + expr_x + ")", "r");
 			var diff_Fy_y = math.derivative(expr_y, "φ");
 			var r = Math.hypot(p.x, p.y);
 			var φ = Math.atan2(p.y, p.x);
@@ -127,15 +127,17 @@ export class Field {
 				diff_Fy_x.evaluate({ x: p.x, y: p.y }) -
 				diff_Fx_y.evaluate({ x: p.x, y: p.y });
     	} else if (this.coordinate_system == "polar") {
-			var diff_Fx_y = math.derivative(expr_x, "r");
-			var diff_Fy_x = math.derivative(expr_y, "φ");
+			var diff_Fr_phi = math.derivative(expr_x, "φ");						// differentiate F_r to phi
+			var diff_rFphi_r = math.derivative("r*(" + expr_y + ")", "r");		// differentiate r*F_phi to r
+			var r = Math.hypot(p.x, p.y);
+			var φ = Math.atan2(p.y, p.x);
 			var curl =
-				diff_Fy_x.evaluate({
+				(1 / r) * diff_rFphi_r.evaluate({
 					r: Math.hypot(p.x, p.y),
 					φ: Math.atan2(p.y, p.x),
 					
 				}) -
-				diff_Fx_y.evaluate({
+				(1 / r) * diff_Fr_phi.evaluate({
 					r: Math.hypot(p.x, p.y),
 					φ: Math.atan2(p.y, p.x),
 			});
