@@ -38,6 +38,9 @@ const paddlewheel_div = document.querySelector("#paddlewheel_div");
 paddlewheel_div.style.visibility = "hidden";
 const paddlewheel_checkbox = document.querySelector("#paddlewheel");
 
+const value_rot = document.querySelector("#div-rot-value-header")
+const value_circ = document.querySelector("#integral-value-header")
+
 /// Setting the Tooltip strings -> End them with a whitespace for gluing them together
 let info_text =
   "Halte die Maus über den einzelnen Elementen still, um mehr über sie zu erfahren.";
@@ -96,7 +99,13 @@ let div_header_text_2 =
 let stokes_header_text_2 =
   " Zeige x- oder y-Komponenten innerhalb eines gezeichneten Rechtecks (<i>Scanfeld</i> deaktiviert), für gezeichnete Vektoren oder in der Nähe eines eingefügten Paddelrades, indem du <i>x-Komponente / y-Komponente anzeigen</i> aktivierst.";
 
-// function for change between stokes and gauss
+let value_text_stokes =
+  "Der angegebene Wert entspricht der z-Komponente der Rotation.";
+
+let value_text_stokes_integration =
+  "Der angegebene Wert entspricht der z-Komponente der Rotation.";
+
+  // function for change between stokes and gauss
 
 export function switch_tooltips(old_theorem) {
   info_btn.setAttribute("data-bs-content", info_text);
@@ -191,6 +200,18 @@ export function switch_tooltips(old_theorem) {
       "title",
       paddlewheel_text,
     );
+
+    value_rot.setAttribute("title", value_text_stokes);
+    value_rot.nextElementSibling.setAttribute(
+      "title",
+      value_text_stokes,
+    )
+
+    value_circ.setAttribute("title", value_text_stokes_integration);
+    value_circ.nextElementSibling.setAttribute(
+      "title",
+      value_text_stokes_integration,
+    )
   }
 
   var all_with_title = document.querySelectorAll("[title]");
@@ -284,6 +305,12 @@ export function switch_language(old_lang, theorem, coords) {
 
     paddlewheel_text =
       "Insert a paddle wheel  in the vector field and move it in the field using the mouse. ";
+
+    value_text_stokes =
+      "The given value corresponds to the z-component of the rotation.";
+
+    value_text_stokes_integration =
+      "The given value corresponds to the z-component of the rotation.";
   } else {
     info_text =
       "Halte die Maus über den einzelnen Elementen still, um mehr über sie zu erfahren.";
@@ -340,6 +367,12 @@ export function switch_language(old_lang, theorem, coords) {
 
     paddlewheel_text =
       "Durch Aktivierung der Box wird ein Schaufelrad in das Feld eingefügt. Dieses kann mit der Maus verschoben werden. ";
+
+    value_text_stokes =
+      "Der angegebene Wert entspricht der z-Komponente der Rotation.";
+
+    value_text_stokes_integration =
+      "Der angegebene Wert entspricht der z-Komponente der Rotation.";
   }
 
   info_btn.setAttribute("data-bs-content", info_text);
@@ -426,6 +459,18 @@ export function switch_language(old_lang, theorem, coords) {
     paddlewheel_checkbox.nextElementSibling.setAttribute(
       "title",
       paddlewheel_text,
+    );
+
+    value_rot.setAttribute("title", value_text_stokes);
+    value_rot.nextElementSibling.setAttribute(
+      "title",
+      value_text_stokes,
+    );
+
+    value_circ.setAttribute("title", value_text_stokes_integration);
+    value_circ.nextElementSibling.setAttribute(
+      "title",
+      value_text_stokes_integration,
     );
   }
 

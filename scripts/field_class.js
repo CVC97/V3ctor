@@ -329,7 +329,7 @@ export class Field {
 	}
 
 
-	// method to fill the list of partial x-vectors
+	// method to fill the list of partial y-vectors
 	add_partial_y_vectors(list) {
 		this.partial_y_vecs.splice(0, this.partial_y_vecs.length);
 		list.forEach((p_and_v) => {
