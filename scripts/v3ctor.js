@@ -8,14 +8,24 @@ import { Vector2d } from "./vector_class.js";
 window.addEventListener("resize", resize);
 
 
-// Variable to chek if mouse button is pressed
+// check mobile device
+if (navigator.maxTouchPoints > 1) {
+	console.log("Mobile Device");
+} else {
+	console.log("Computer");
+}
+
+// mobile eventhandling
+const ongoingTouches = new Map();
+
+
+// Variable to check if mouse button is pressed (mobile compatibility)
 var mouseDown = 0;
-document.body.onmousedown = function () {
-    ++mouseDown;
-};
-document.body.onmouseup = function () {
-    --mouseDown;
-};
+
+document.body.addEventListener("pointerdown", () => mouseDown++);
+document.body.addEventListener("pointerup", () => mouseDown--);
+document.body.addEventListener("pointercancel", () => mouseDown = 0);
+
 
 switch_tooltips("stokes");
 
@@ -540,7 +550,6 @@ export function resetPage(event) {
 
 
 // Event Handeling for checkboxes
-
 paddlewheel_checkbox.addEventListener("change", (event) => {
 	if (paddlewheel_checkbox.checked) {
 		p_wheel.visible = true;
@@ -716,9 +725,11 @@ partial_phi_checkbox.addEventListener("change", (event) => {
 });
 
 
+
+
 //// Interactivity Handling on Canvas ////
 
-// When mousebutton is released:
+// when mousebutton is released ( "click" should be mobile compatible):
 canvas.addEventListener("click", (event) => {
 	move = 0;
 
@@ -773,7 +784,7 @@ canvas.addEventListener("click", (event) => {
 });
 
 
-// When mouse moves over canvas:
+// when mouse moves over canvas:
 var state = "outside";
 var old_startpoint = { x: 0, y: 0 };
 var old_width = 0;
