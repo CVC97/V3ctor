@@ -15,9 +15,6 @@ if (navigator.maxTouchPoints > 1) {
 	console.log("Computer");
 }
 
-// mobile eventhandling
-const ongoingTouches = new Map();
-
 
 // Variable to check if mouse button is pressed (mobile compatibility)
 var mouseDown = 0;
@@ -1058,6 +1055,183 @@ function redraw_canvas() {
 	coordinates.draw(c);										// draws coordinates (if active)
 	p_wheel.draw(c);											// draws wheel (if active)
 }
+
+
+
+////////////////////////////////////////////////////////////
+// TOUCH / MOBILE SUPPORT
+////////////////////////////////////////////////////////////
+
+let touchState = "idle"; // "idle" | "drawing" | "moving" | "tapping_outside"
+let touchMoved = false;
+
+/**
+ * Helper: get canvas-relative position from a Touch object.
+ */
+function getTouchPos(touch, bounding) {
+    return {
+        x: touch.clientX - bounding.left,
+        y: touch.clientY - bounding.top,
+    };
+}
+
+/**
+ * Helper: derive rect geometry from two touch points (opposite corners).
+ */
+function rectFromTwoTouches(t1, t2) {
+    return {
+        startpoint: { x: Math.min(t1.x, t2.x), y: Math.min(t1.y, t2.y) },
+        width:  Math.abs(t2.x - t1.x),
+        height: Math.abs(t2.y - t1.y),
+    };
+}
+
+/**
+ * Helper: refresh all rect-dependent overlays (partials, projections, labels).
+ * Mirrors what the mousemove handler does after every geometry change.
+ */
+function updateRectDependents() {
+    rect.set_vectors_in_rect(F1);
+
+    if (p_wheel.visible) {
+        p_wheel.set_vectors_near_wheel(F1);
+    }
+    if (projections_checkbox.checked) {
+        theorem === "gauss"
+            ? rect.draw_surface_vektores()
+            : rect.draw_line_vectores();
+    }
+
+    const combined = rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel);
+    if (partial_x_checkbox.checked)   F1.add_partial_x_vectors(combined);
+    if (partial_y_checkbox.checked)   F1.add_partial_y_vectors(combined);
+    if (partial_r_checkbox.checked)   F1.add_partial_r_vectors(combined);
+    if (partial_phi_checkbox.checked) F1.add_partial_phi_vectors(combined);
+
+    set_integral_label();
+    set_div_rot_label(F1.transform(rect.middle()));
+}
+
+/**
+ * Helper: remove the rectangle entirely (mirrors the dblclick handler).
+ */
+function removeRect() {
+    rect.active = false;
+
+    F1.rec_vectors = [];
+    F1.add_partial_x_vectors([]);
+    F1.add_partial_y_vectors([]);
+    F1.add_partial_r_vectors([]);
+    F1.add_partial_phi_vectors([]);
+
+    projections_checkbox.checked  = false;
+    partial_x_checkbox.checked    = false;
+    partial_y_checkbox.checked    = false;
+    partial_r_checkbox.checked    = false;
+    partial_phi_checkbox.checked  = false;
+
+    redraw_canvas();
+
+    rect = new Rectangle(F1);  // fresh rect, ready for next draw
+    rect.active = true;
+}
+
+
+// ── touchstart ──────────────────────────────────────────────────────────────
+
+canvas.addEventListener("touchstart", (event) => {
+    event.preventDefault();                         // block scroll / zoom
+    touchMoved = false;
+    const bounding = canvas.getBoundingClientRect();
+
+    if (event.touches.length === 2) {
+        // Two fingers: start (or restart) drawing the rectangle
+        const t1 = getTouchPos(event.touches[0], bounding);
+        const t2 = getTouchPos(event.touches[1], bounding);
+        const r  = rectFromTwoTouches(t1, t2);
+
+        rect.startpoint = r.startpoint;
+        rect.width       = r.width;
+        rect.height      = r.height;
+        rect.active      = true;
+
+        updateRectDependents();
+        redraw_canvas();
+        touchState = "drawing";
+
+    } else if (event.touches.length === 1) {
+        const p = getTouchPos(event.touches[0], bounding);
+
+        if (rect.active && rect.in_rect(p)) {
+            // Inside rect → prepare to move
+            touchState       = "moving";
+            first_clicked_p  = { x: p.x, y: p.y };
+            Object.assign(old_startpoint, rect.startpoint);
+        } else {
+            // Outside rect → might be a "remove" tap
+            touchState = "tapping_outside";
+        }
+    }
+}, { passive: false });
+
+
+// ── touchmove ───────────────────────────────────────────────────────────────
+
+canvas.addEventListener("touchmove", (event) => {
+    event.preventDefault();
+    touchMoved = true;
+    const bounding = canvas.getBoundingClientRect();
+
+    if (event.touches.length === 2 && touchState === "drawing") {
+        // Resize rectangle live as fingers spread / pinch
+        const t1 = getTouchPos(event.touches[0], bounding);
+        const t2 = getTouchPos(event.touches[1], bounding);
+        const r  = rectFromTwoTouches(t1, t2);
+
+        rect.startpoint = r.startpoint;
+        rect.width       = r.width;
+        rect.height      = r.height;
+
+        updateRectDependents();
+        redraw_canvas();
+
+    } else if (event.touches.length === 1 && touchState === "moving") {
+        // Translate rectangle
+        const p = getTouchPos(event.touches[0], bounding);
+
+        rect.startpoint.x = old_startpoint.x - (first_clicked_p.x - p.x);
+        rect.startpoint.y = old_startpoint.y - (first_clicked_p.y - p.y);
+
+        updateRectDependents();
+        redraw_canvas();
+    }
+}, { passive: false });
+
+
+// ── touchend ────────────────────────────────────────────────────────────────
+
+canvas.addEventListener("touchend", (event) => {
+    event.preventDefault();
+
+    // A clean tap (no drag) outside the rect → remove it
+    if (touchState === "tapping_outside" && !touchMoved) {
+        removeRect();
+    }
+
+    // When all fingers lifted, reset state
+    if (event.touches.length === 0) {
+        touchState = "idle";
+    }
+}, { passive: false });
+
+
+// ── touchcancel ─────────────────────────────────────────────────────────────
+
+canvas.addEventListener("touchcancel", () => {
+    touchState = "idle";
+});
+
+
 
 ////////////////////////////////////////////////////////////7
 
