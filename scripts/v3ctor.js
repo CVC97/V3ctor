@@ -1059,10 +1059,10 @@ function redraw_canvas() {
 
 
 ////////////////////////////////////////////////////////////
-// TOUCH / MOBILE SUPPORT (thanks, Claude)
+// TOUCH / MOBILE SUPPORT
 ////////////////////////////////////////////////////////////
 
-let touchState = "idle"; // "idle" | "drawing" | "moving" | "tapping_outside"
+let touchState = "idle"; // "idle"|"drawing"|"moving"|"moving_wheel"|"fieldscanning"|"tapping_outside"
 let touchMoved = false;
 
 
@@ -1079,14 +1079,13 @@ function getTouchPos(touch, bounding) {
 function rectFromTwoTouches(t1, t2) {
     return {
         startpoint: { x: Math.min(t1.x, t2.x), y: Math.min(t1.y, t2.y) },
-        width:  Math.abs(t2.x - t1.x),
-        height: Math.abs(t2.y - t1.y),
+        width:      Math.abs(t2.x - t1.x),
+        height:     Math.abs(t2.y - t1.y),
     };
 }
 
 
 // Helper: refresh all rect-dependent overlays (partials, projections, labels).
-// Mirrors what the mousemove handler does after every geometry change.
 function updateRectDependents() {
     rect.set_vectors_in_rect(F1);
 
@@ -1110,6 +1109,23 @@ function updateRectDependents() {
 }
 
 
+// Helper: add a single fieldscanner vector at canvas position p.
+function addFieldscannerVec(p) {
+    const p_coord = F1.transform(p);
+    const v = F1.value_at(p_coord.x, p_coord.y);
+    v.x *= F1.norm_factor;
+    v.y *= F1.norm_factor;
+    v.recalc_len();
+    F1.fieldscanner_vectors.push({ p: p, v: v });
+    set_div_rot_label(p_coord);
+
+    if (partial_x_checkbox.checked)   F1.add_partial_x_vectors(F1.fieldscanner_vectors);
+    if (partial_y_checkbox.checked)   F1.add_partial_y_vectors(F1.fieldscanner_vectors);
+    if (partial_r_checkbox.checked)   F1.add_partial_r_vectors(F1.fieldscanner_vectors);
+    if (partial_phi_checkbox.checked) F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
+}
+
+
 // Helper: remove the rectangle entirely (mirrors the dblclick handler).
 function removeRect() {
     rect.active = false;
@@ -1128,19 +1144,20 @@ function removeRect() {
 
     redraw_canvas();
 
-    rect = new Rectangle(F1);  // fresh rect, ready for next draw
+    rect = new Rectangle(F1);   // fresh rect, ready for next draw
     rect.active = true;
 }
 
 
 // ── touchstart ──────────────────────────────────────────────────────────────
 canvas.addEventListener("touchstart", (event) => {
-    event.preventDefault();                         // block scroll / zoom
+    event.preventDefault();
     touchMoved = false;
+    move = 0;                                           // reuse the existing move counter
     const bounding = canvas.getBoundingClientRect();
 
     if (event.touches.length === 2) {
-        // Two fingers: start (or restart) drawing the rectangle
+        // Two fingers → draw / reshape rectangle
         const t1 = getTouchPos(event.touches[0], bounding);
         const t2 = getTouchPos(event.touches[1], bounding);
         const r  = rectFromTwoTouches(t1, t2);
@@ -1157,13 +1174,22 @@ canvas.addEventListener("touchstart", (event) => {
     } else if (event.touches.length === 1) {
         const p = getTouchPos(event.touches[0], bounding);
 
-        if (rect.active && rect.in_rect(p)) {
-            // Inside rect → prepare to move
-            touchState       = "moving";
-            first_clicked_p  = { x: p.x, y: p.y };
+        if (fieldscanner_checkbox.checked) {
+            // Fieldscanner on → scan mode (tap or drag)
+            touchState = "fieldscanning";
+
+        } else if (p_wheel.visible && p_wheel.near(p)) {
+            // Near paddlewheel → move it
+            touchState = "moving_wheel";
+
+        } else if (rect.active && rect.in_rect(p)) {
+            // Inside rectangle → translate it
+            touchState      = "moving";
+            first_clicked_p = { x: p.x, y: p.y };
             Object.assign(old_startpoint, rect.startpoint);
+
         } else {
-            // Outside rect → might be a "remove" tap
+            // Anywhere else → candidate for "remove rect" tap
             touchState = "tapping_outside";
         }
     }
@@ -1177,7 +1203,7 @@ canvas.addEventListener("touchmove", (event) => {
     const bounding = canvas.getBoundingClientRect();
 
     if (event.touches.length === 2 && touchState === "drawing") {
-        // Resize rectangle live as fingers spread / pinch
+        // Pinch / spread → live-resize rectangle
         const t1 = getTouchPos(event.touches[0], bounding);
         const t2 = getTouchPos(event.touches[1], bounding);
         const r  = rectFromTwoTouches(t1, t2);
@@ -1189,44 +1215,37 @@ canvas.addEventListener("touchmove", (event) => {
         updateRectDependents();
         redraw_canvas();
 
-    } else if (event.touches.length === 1 && touchState === "moving") {
-		const p = getTouchPos(event.touches[0], bounding);
-		
-		// move rectangle
-		if (fieldscanner_checkbox.checked == false) { 
-			// Translate rectangle
-			rect.startpoint.x = old_startpoint.x - (first_clicked_p.x - p.x);
-			rect.startpoint.y = old_startpoint.y - (first_clicked_p.y - p.y);
+    } else if (event.touches.length === 1) {
+        const p = getTouchPos(event.touches[0], bounding);
 
-			updateRectDependents();
-			
-		// add fieldscanner vectors when moving finger
-		} else {
-			if (move % 10 == 0) {
-				var p_coord = F1.transform(p);
-				var v = F1.value_at(p_coord.x, p_coord.y);
-				v.x *= F1.norm_factor;
-				v.y *= F1.norm_factor;
-				v.recalc_len();
-				F1.fieldscanner_vectors.push({ p: p, v: v });
-				set_div_rot_label(p_coord);
+        if (touchState === "moving") {
+            // Translate rectangle
+            rect.startpoint.x = old_startpoint.x - (first_clicked_p.x - p.x);
+            rect.startpoint.y = old_startpoint.y - (first_clicked_p.y - p.y);
+            updateRectDependents();
+            redraw_canvas();
 
-				if (partial_x_checkbox.checked) {
-					F1.add_partial_x_vectors(F1.fieldscanner_vectors);
-				}
-				if (partial_y_checkbox.checked) {
-					F1.add_partial_y_vectors(F1.fieldscanner_vectors);
-				}
-				if (partial_r_checkbox.checked) {
-					F1.add_partial_r_vectors(F1.fieldscanner_vectors);
-				}
-				if (partial_phi_checkbox.checked) {
-					F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
-				}
-			}
-			redraw_canvas();
-			move += 1;
-		}
+        } else if (touchState === "moving_wheel") {
+            // Move paddlewheel — mirrors mouse "on_p_wheel" branch
+            p_wheel.move_to(p, F1);
+            p_wheel.set_vectors_near_wheel(F1);
+
+            const combined = rect.vecs_in_rect.concat(p_wheel.vecs_near_wheel);
+            if (partial_x_checkbox.checked)   F1.add_partial_x_vectors(combined);
+            if (partial_y_checkbox.checked)   F1.add_partial_y_vectors(combined);
+            if (partial_r_checkbox.checked)   F1.add_partial_r_vectors(combined);
+            if (partial_phi_checkbox.checked) F1.add_partial_phi_vectors(combined);
+
+            redraw_canvas();
+
+        } else if (touchState === "fieldscanning") {
+            // Drag → add a vector every 10 frames (mirrors mousemove fieldscanner)
+            if (move % 10 === 0) {
+                addFieldscannerVec(p);
+            }
+            redraw_canvas();
+            move += 1;
+        }
     }
 }, { passive: false });
 
@@ -1234,47 +1253,32 @@ canvas.addEventListener("touchmove", (event) => {
 // ── touchend ────────────────────────────────────────────────────────────────
 canvas.addEventListener("touchend", (event) => {
     event.preventDefault();
+    // Use changedTouches: the finger that just lifted (touches[] is already empty)
+    const bounding = canvas.getBoundingClientRect();    // fix: define bounding here too
+    const p = getTouchPos(event.changedTouches[0], bounding);
 
-	if (fieldscanner_checkbox.checked == false) { 
-		// A clean tap (no drag) outside the rect → remove it
-		if (touchState === "tapping_outside" && !touchMoved) {
-			removeRect();
-		}
+    if (touchState === "fieldscanning" && !touchMoved) {
+        // Clean tap with fieldscanner → add single vector at tap position
+        addFieldscannerVec(p);
+        redraw_canvas();
 
-		// When all fingers lifted, reset state
-		if (event.touches.length === 0) {
-			touchState = "idle";
-		}
-	} else {
-		const p = getTouchPos(event.touches[0], bounding);
-		var p_coord = F1.transform(p);
-		var v = F1.value_at(p_coord.x, p_coord.y);
-		v.x *= F1.norm_factor;
-		v.y *= F1.norm_factor;
-		v.recalc_len();
-		F1.fieldscanner_vectors.push({ p: p, v: v });
-		set_div_rot_label(p_coord);
+    } else if (touchState === "tapping_outside" && !touchMoved) {
+        // Clean tap outside rect → remove rectangle
+        removeRect();
+    }
 
-		if (partial_x_checkbox.checked) {
-			F1.add_partial_x_vectors(F1.fieldscanner_vectors);
-		}
-		if (partial_y_checkbox.checked) {
-			F1.add_partial_y_vectors(F1.fieldscanner_vectors);
-		}
-		if (partial_r_checkbox.checked) {
-			F1.add_partial_r_vectors(F1.fieldscanner_vectors);
-		}
-		if (partial_phi_checkbox.checked) {
-			F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
-		}
-		redraw_canvas();
-	}
+    // Reset state when all fingers are up
+    if (event.touches.length === 0) {
+        touchState = "idle";
+        move = 0;
+    }
 }, { passive: false });
 
 
 // ── touchcancel ─────────────────────────────────────────────────────────────
 canvas.addEventListener("touchcancel", () => {
     touchState = "idle";
+    move = 0;
 });
 
 
