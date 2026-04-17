@@ -1059,15 +1059,14 @@ function redraw_canvas() {
 
 
 ////////////////////////////////////////////////////////////
-// TOUCH / MOBILE SUPPORT
+// TOUCH / MOBILE SUPPORT (thanks, Claude)
 ////////////////////////////////////////////////////////////
 
 let touchState = "idle"; // "idle" | "drawing" | "moving" | "tapping_outside"
 let touchMoved = false;
 
-/**
- * Helper: get canvas-relative position from a Touch object.
- */
+
+// Helper: get canvas-relative position from a Touch object.
 function getTouchPos(touch, bounding) {
     return {
         x: touch.clientX - bounding.left,
@@ -1075,9 +1074,8 @@ function getTouchPos(touch, bounding) {
     };
 }
 
-/**
- * Helper: derive rect geometry from two touch points (opposite corners).
- */
+
+// Helper: derive rect geometry from two touch points (opposite corners).
 function rectFromTwoTouches(t1, t2) {
     return {
         startpoint: { x: Math.min(t1.x, t2.x), y: Math.min(t1.y, t2.y) },
@@ -1086,10 +1084,9 @@ function rectFromTwoTouches(t1, t2) {
     };
 }
 
-/**
- * Helper: refresh all rect-dependent overlays (partials, projections, labels).
- * Mirrors what the mousemove handler does after every geometry change.
- */
+
+// Helper: refresh all rect-dependent overlays (partials, projections, labels).
+// Mirrors what the mousemove handler does after every geometry change.
 function updateRectDependents() {
     rect.set_vectors_in_rect(F1);
 
@@ -1112,9 +1109,8 @@ function updateRectDependents() {
     set_div_rot_label(F1.transform(rect.middle()));
 }
 
-/**
- * Helper: remove the rectangle entirely (mirrors the dblclick handler).
- */
+
+// Helper: remove the rectangle entirely (mirrors the dblclick handler).
 function removeRect() {
     rect.active = false;
 
@@ -1138,7 +1134,6 @@ function removeRect() {
 
 
 // ── touchstart ──────────────────────────────────────────────────────────────
-
 canvas.addEventListener("touchstart", (event) => {
     event.preventDefault();                         // block scroll / zoom
     touchMoved = false;
@@ -1176,7 +1171,6 @@ canvas.addEventListener("touchstart", (event) => {
 
 
 // ── touchmove ───────────────────────────────────────────────────────────────
-
 canvas.addEventListener("touchmove", (event) => {
     event.preventDefault();
     touchMoved = true;
@@ -1196,37 +1190,89 @@ canvas.addEventListener("touchmove", (event) => {
         redraw_canvas();
 
     } else if (event.touches.length === 1 && touchState === "moving") {
-        // Translate rectangle
-        const p = getTouchPos(event.touches[0], bounding);
+		const p = getTouchPos(event.touches[0], bounding);
+		
+		// move rectangle
+		if (fieldscanner_checkbox.checked == false) { 
+			// Translate rectangle
+			rect.startpoint.x = old_startpoint.x - (first_clicked_p.x - p.x);
+			rect.startpoint.y = old_startpoint.y - (first_clicked_p.y - p.y);
 
-        rect.startpoint.x = old_startpoint.x - (first_clicked_p.x - p.x);
-        rect.startpoint.y = old_startpoint.y - (first_clicked_p.y - p.y);
+			updateRectDependents();
+			
+		// add fieldscanner vectors when moving finger
+		} else {
+			if (move % 10 == 0) {
+				var p_coord = F1.transform(p);
+				var v = F1.value_at(p_coord.x, p_coord.y);
+				v.x *= F1.norm_factor;
+				v.y *= F1.norm_factor;
+				v.recalc_len();
+				F1.fieldscanner_vectors.push({ p: p, v: v });
+				set_div_rot_label(p_coord);
 
-        updateRectDependents();
-        redraw_canvas();
+				if (partial_x_checkbox.checked) {
+					F1.add_partial_x_vectors(F1.fieldscanner_vectors);
+				}
+				if (partial_y_checkbox.checked) {
+					F1.add_partial_y_vectors(F1.fieldscanner_vectors);
+				}
+				if (partial_r_checkbox.checked) {
+					F1.add_partial_r_vectors(F1.fieldscanner_vectors);
+				}
+				if (partial_phi_checkbox.checked) {
+					F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
+				}
+			}
+			redraw_canvas();
+			move += 1;
+		}
     }
 }, { passive: false });
 
 
 // ── touchend ────────────────────────────────────────────────────────────────
-
 canvas.addEventListener("touchend", (event) => {
     event.preventDefault();
 
-    // A clean tap (no drag) outside the rect → remove it
-    if (touchState === "tapping_outside" && !touchMoved) {
-        removeRect();
-    }
+	if (fieldscanner_checkbox.checked == false) { 
+		// A clean tap (no drag) outside the rect → remove it
+		if (touchState === "tapping_outside" && !touchMoved) {
+			removeRect();
+		}
 
-    // When all fingers lifted, reset state
-    if (event.touches.length === 0) {
-        touchState = "idle";
-    }
+		// When all fingers lifted, reset state
+		if (event.touches.length === 0) {
+			touchState = "idle";
+		}
+	} else {
+		const p = getTouchPos(event.touches[0], bounding);
+		var p_coord = F1.transform(p);
+		var v = F1.value_at(p_coord.x, p_coord.y);
+		v.x *= F1.norm_factor;
+		v.y *= F1.norm_factor;
+		v.recalc_len();
+		F1.fieldscanner_vectors.push({ p: p, v: v });
+		set_div_rot_label(p_coord);
+
+		if (partial_x_checkbox.checked) {
+			F1.add_partial_x_vectors(F1.fieldscanner_vectors);
+		}
+		if (partial_y_checkbox.checked) {
+			F1.add_partial_y_vectors(F1.fieldscanner_vectors);
+		}
+		if (partial_r_checkbox.checked) {
+			F1.add_partial_r_vectors(F1.fieldscanner_vectors);
+		}
+		if (partial_phi_checkbox.checked) {
+			F1.add_partial_phi_vectors(F1.fieldscanner_vectors);
+		}
+		redraw_canvas();
+	}
 }, { passive: false });
 
 
 // ── touchcancel ─────────────────────────────────────────────────────────────
-
 canvas.addEventListener("touchcancel", () => {
     touchState = "idle";
 });
