@@ -116,10 +116,14 @@ const div_header_text_2_ger =
 const stokes_header_text_2_ger =
 	`Zeige x- oder y-Komponenten innerhalb eines gezeichneten Rechtecks (<i>Scanfeld</i> deaktiviert), 
 	für gezeichnete Vektoren oder in der Nähe eines eingefügten Paddelrades, indem du <i>x-Komponente / y-Komponente anzeigen</i> aktivierst. `;
+const value_text_gauss_ger =
+	`Der angegebene Wert entspricht der Divergenz. `;
+const value_text_gauss_integration_ger =
+	`Der angegebene Wert entspricht dem Fluss durch die Fläche. `;
 const value_text_stokes_ger =
 	`Der angegebene Wert entspricht der z-Komponente der Rotation. `;
 const value_text_stokes_integration_ger =
-	`Der angegebene Wert entspricht der z-Komponente der Rotation. `;
+	`Der angegebene Wert entspricht der Zirkulation entlang der Kurve. `;
 
 // mobile
 const rectangle_text_gauss_mobile_ger =
@@ -199,10 +203,14 @@ const projections_text_stokes_eng =
 	`Display the projection of the field vectors on the vector path element of the rectangle curve. `;
 const paddlewheel_text_eng =
 	`Insert a paddle wheel in the vector field and move it in the field using the mouse. `;
+const value_text_gauss_eng =
+	`The given value corresponds to the divergence. `;
+const value_text_gauss_integration_eng =
+	`The given value corresponds to the flux through the area. `;
 const value_text_stokes_eng =
 	`The given value corresponds to the z-component of the rotation. `;
 const value_text_stokes_integration_eng =
-	`The given value corresponds to the z-component of the rotation. `;
+	`The given value corresponds to the circulation along the curve. `;
 
 // mobile
 const rectangle_text_gauss_mobile_eng =
@@ -247,6 +255,8 @@ let partial_phi_text_stokes = partial_phi_text_stokes_ger;
 let projections_text_gauss = projections_text_gauss_ger;
 let projections_text_stokes = projections_text_stokes_ger;
 let paddlewheel_text = paddlewheel_text_ger;
+let value_text_gauss = value_text_gauss_ger;
+let value_text_gauss_integration = value_text_gauss_integration_ger;
 let value_text_stokes = value_text_stokes_ger;
 let value_text_stokes_integration = value_text_stokes_integration_ger;
 // // mobile
@@ -373,6 +383,8 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		//  display the projection of the field vectors on the vector path element of the rectangle curve.
 		projections_text_stokes = projections_text_stokes_eng;
 		paddlewheel_text = paddlewheel_text_eng;
+		value_text_gauss = value_text_gauss_eng;
+		value_text_gauss_integration = value_text_gauss_integration_eng;
 		value_text_stokes = value_text_stokes_eng;
 		value_text_stokes_integration = value_text_stokes_integration_eng;
 		if (mobile_device) {
@@ -408,6 +420,8 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		//  display the projection of the field vectors on the vector path element of the rectangle curve.
 		projections_text_stokes = projections_text_stokes_ger;
 		paddlewheel_text = paddlewheel_text_ger;
+		value_text_gauss = value_text_gauss_ger;
+		value_text_gauss_integration = value_text_gauss_integration_ger;
 		value_text_stokes = value_text_stokes_ger;
 		value_text_stokes_integration = value_text_stokes_integration_ger;
 		if (mobile_device) {
