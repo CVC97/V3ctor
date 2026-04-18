@@ -126,6 +126,8 @@ const value_text_stokes_integration_ger =
 	`Der angegebene Wert entspricht der Zirkulation entlang der Kurve. `;
 
 // mobile
+const info_text_mobile_ger =
+  	`Berühre die einzelnen Elemente, um mehr über sie zu erfahren. `;
 const rectangle_text_gauss_mobile_ger =
   	`Mit zwei Fingern kann ein Rechteck in das Vektorfeld gezogen werden (<i>Feld abtasten</i> muss deaktiviert sein). 
 	Dieses kann mit dem Finger im Feld bewegt werde. Der Fluss durch/entlang des Randes der aufgezogenen Rechteckfläche wird angezeigt. 
@@ -213,6 +215,8 @@ const value_text_stokes_integration_eng =
 	`The given value corresponds to the circulation along the curve. `;
 
 // mobile
+const info_text_mobile_eng =
+  	`Touch elements of the simulationto to learn more about their features . `;
 const rectangle_text_gauss_mobile_eng =
 	`Draw a rectangle into the vector field with two fingers (<i>Scan field</i> must be deactivated). 
 	Move the drawn rectangle in the field with the finger in the rectangle. The flow through the boundary of the drawn rectangle area is shown below. 
@@ -261,6 +265,7 @@ let value_text_stokes = value_text_stokes_ger;
 let value_text_stokes_integration = value_text_stokes_integration_ger;
 // // mobile
 // if (mobile_device) {
+// 	info_text = info_text_mobile_ger;
 // 	rectangle_text_gauss = rectangle_text_gauss_mobile_ger;
 // 	rectangle_text_stokes = rectangle_text_stokes_mobile_ger;
 // 	fieldscanner_text_gauss = fieldscanner_text_gauss_mobile_ger;
@@ -388,6 +393,7 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		value_text_stokes = value_text_stokes_eng;
 		value_text_stokes_integration = value_text_stokes_integration_eng;
 		if (mobile_device) {
+			info_text = info_text_mobile_eng;
 			rectangle_text_gauss = rectangle_text_gauss_mobile_eng;
 			rectangle_text_stokes = rectangle_text_stokes_mobile_eng;
 			fieldscanner_text_gauss = fieldscanner_text_gauss_mobile_eng;
@@ -426,6 +432,7 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		value_text_stokes = value_text_stokes_ger;
 		value_text_stokes_integration = value_text_stokes_integration_ger;
 		if (mobile_device) {
+			info_text = info_text_mobile_ger;
 			rectangle_text_gauss = rectangle_text_gauss_mobile_ger;
 			rectangle_text_stokes = rectangle_text_stokes_mobile_ger;
 			fieldscanner_text_gauss = fieldscanner_text_gauss_mobile_ger;
