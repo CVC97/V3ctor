@@ -412,10 +412,11 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		partial_y_text_gauss = partial_y_text_gauss_ger;
 		partial_x_text_stokes = partial_x_text_stokes_ger;
 		partial_y_text_stokes = partial_x_text_stokes_ger;
-		partial_phi_text_gauss = partial_phi_text_gauss_eng;
-		partial_r_text_stokes = partial_r_text_stokes_eng;
-		partial_phi_text_stokes = partial_phi_text_stokes_eng;
-		projections_text_gauss = projections_text_gauss_eng;
+		partial_r_text_gauss = partial_r_text_gauss_ger;
+		partial_phi_text_gauss = partial_phi_text_gauss_ger;
+		partial_r_text_stokes = partial_r_text_stokes_ger;
+		partial_phi_text_stokes = partial_phi_text_stokes_ger;
+		projections_text_gauss = projections_text_gauss_ger;
 		projections_text_gauss = projections_text_gauss_ger;
 		//  display the projection of the field vectors on the vector path element of the rectangle curve.
 		projections_text_stokes = projections_text_stokes_ger;
@@ -454,6 +455,8 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		partial_x_checkbox_label.setAttribute("title", partial_x_text_gauss);
 		// partial_y_checkbox.setAttribute("title", partial_y_text_gauss);
 		partial_y_checkbox_label.setAttribute("title", partial_y_text_gauss);
+		partial_r_checkbox_label.setAttribute("title", partial_r_text_gauss);
+		partial_phi_checkbox_label.setAttribute("title", partial_phi_text_gauss);
 		value_rot.setAttribute("title", value_text_gauss);
 		value_rot.nextElementSibling.setAttribute("title", value_text_gauss);
 		value_circ.setAttribute("title", value_text_gauss_integration);
@@ -470,6 +473,8 @@ export function switch_language(old_lang, theorem, coords, mobile_device = false
 		// partial_y_checkbox.setAttribute("title", partial_y_text_stokes);
 		partial_y_checkbox_label.setAttribute("title", partial_y_text_stokes);
 		// paddlewheel_checkbox.setAttribute("title", paddlewheel_text);
+		partial_r_checkbox_label.setAttribute("title", partial_r_text_stokes);
+		partial_phi_checkbox_label.setAttribute("title", partial_phi_text_stokes);
 		paddlewheel_checkbox_label.setAttribute("title", paddlewheel_text);
 		value_rot.setAttribute("title", value_text_stokes);
 		value_rot.nextElementSibling.setAttribute("title", value_text_stokes);
