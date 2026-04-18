@@ -263,15 +263,15 @@ let value_text_gauss = value_text_gauss_ger;
 let value_text_gauss_integration = value_text_gauss_integration_ger;
 let value_text_stokes = value_text_stokes_ger;
 let value_text_stokes_integration = value_text_stokes_integration_ger;
-// // mobile
-// if (mobile_device) {
-// 	info_text = info_text_mobile_ger;
-// 	rectangle_text_gauss = rectangle_text_gauss_mobile_ger;
-// 	rectangle_text_stokes = rectangle_text_stokes_mobile_ger;
-// 	fieldscanner_text_gauss = fieldscanner_text_gauss_mobile_ger;
-// 	fieldscanner_text_stokes = fieldscanner_text_stokes_mobile_ger;
-// 	paddlewheel_text = paddlewheel_text_mobile_ger;
-// }
+// mobile
+if (mobile_device) {
+	info_text = info_text_mobile_ger;
+	rectangle_text_gauss = rectangle_text_gauss_mobile_ger;
+	rectangle_text_stokes = rectangle_text_stokes_mobile_ger;
+	fieldscanner_text_gauss = fieldscanner_text_gauss_mobile_ger;
+	fieldscanner_text_stokes = fieldscanner_text_stokes_mobile_ger;
+	paddlewheel_text = paddlewheel_text_mobile_ger;
+}
 
 
 // function for change between stokes and gauss
