@@ -26,7 +26,7 @@ document.body.addEventListener("pointerup", () => mouseDown--);
 document.body.addEventListener("pointercancel", () => mouseDown = 0);
 
 
-switch_tooltips("stokes");
+switch_tooltips("stokes", mobile_device);
 
 
 
@@ -196,7 +196,7 @@ export function clickedCartesian(event) {
 	y_phi_button.style.visibility = "hidden"
 	F1.coordinate_system = coordinate_system;
 	clickPressField(event);
-	switch_tooltip_coords("polar");
+	switch_tooltip_coords("polar", mobile_device);
 }
 
 export function clickedPolar(event) {
@@ -218,7 +218,7 @@ export function clickedPolar(event) {
 
 	F1.coordinate_system = coordinate_system;
 	clickPressField(event);
-	switch_tooltip_coords("cartesian");
+	switch_tooltip_coords("cartesian", mobile_device);
 
 	// Tooltips init
 	tooltipTriggerList = [].slice.call(
@@ -281,7 +281,7 @@ export function clickedLanguage(event) {
 			y_component_entry_label.innerHTML = "y component";
 		}
 
-    	switch_language(lang, theorem, coordinate_system);
+    	switch_language(lang, theorem, coordinate_system, mobile_device);
   	} else if (lang == "en") {
 		lang = "de";
 		btn_lang.innerHTML = "Switch to English";
@@ -331,7 +331,7 @@ export function clickedLanguage(event) {
 		btn_gauss.innerHTML = "Satz von Gauss";
 		btn_stokes.innerHTML = "Satz von Stokes";
 
-		switch_language(lang, theorem, coordinate_system);
+		switch_language(lang, theorem, coordinate_system, mobile_device);
   	}
 
 	// Popover init from bootstrap for infobox
@@ -373,7 +373,7 @@ export function clickedGauss(event) {
 	latex_image.src = "./res/Latex_Gauss.png";
 	paddlewheel_div.style.visibility = "hidden";
 	// Tooltips
-	switch_tooltips("stokes");
+	switch_tooltips("stokes", mobile_device);
 	theorem = "gauss";
 	// Background
 	set_integral_label();
@@ -427,7 +427,7 @@ export function clickedStokes(event) {
 	}
 	latex_image.src = "./res/Latex_Stokes.png";
 	paddlewheel_div.style.visibility = "visible";
-	switch_tooltips("gauss");
+	switch_tooltips("gauss", mobile_device);
 	theorem = "stokes";
 	set_integral_label();
 	F1.rec_vectors = [];
