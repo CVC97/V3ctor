@@ -9,7 +9,7 @@ Durch Aktivierung dies Boxen werden die Koordinatenachsen in den kartesischen Ko
 Mit dem Mauszeiger kann ein Rechteck in das Vektorfeld gezogen werden. Dafür muss die CheckBox **Feld abtasten** deaktiviert sein. Das Rechteck kann mit der Maus im Feld bewegt und seine Ränder können beliebig verschoben werden. Der Fluss durch bzw. entlang des Randes der aufgezogenen Rechteckfläche kann durch die Projektions Checkbox angezeigt werden. Die Angezeigte Divergenz bzw. Rotation wird am Mittelpunkt des Rechtecks berechnet. Ein Doppelklick im Vektorfeld entfernt das Rechteck und sämtliche eingezeichneten Vektoren.
 
 
-Bei Aktivierung der CkeckBox **Feld abtasten** können durch Festhalten der Maustaste Vektorern eingezeichnet werden. Für diese Stelle wird der Wert der Divergenz bzw der Rotation angezeigt.
+Bei Aktivierung der CheckBox **Feld abtasten** können durch Festhalten der Maustaste Vektorern eingezeichnet werden. Für diese Stelle wird der Wert der Divergenz bzw der Rotation angezeigt.
 
 const partial_x_text_gauss = 'Durch Aktivierung der x-Komponente CheckBox kann diese innerhalb eines Rechtecks oder an den eingezeichneten Vektoren eingeblendet werden. Das gleiche gillt für die y-Komponente CheckBox.
 

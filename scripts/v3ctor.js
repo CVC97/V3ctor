@@ -9,8 +9,10 @@ window.addEventListener("resize", resize);
 
 
 // check mobile device
+let mobile_device = false;
 if (navigator.maxTouchPoints > 1) {
 	console.log("Mobile Device");
+	mobile_device = true;
 } else {
 	console.log("Computer");
 }
@@ -115,6 +117,7 @@ const partial_phi_checkbox = document.querySelector("#phicomponentview");
 const partial_phi_checkbox_label = document.querySelector("#phicomponentview-label");
 //Projections
 const projections_checkbox = document.querySelector("#projection");
+const projections_checkbox_label = document.querySelector("#projection-label");
 // Output Labels
 const div_rot_label = document.querySelector("#div-rot-value");
 const integral_label = document.querySelector("#integral-value");
@@ -126,7 +129,7 @@ const drop_down_menu = document.querySelector("#dropdown-menu");
 const drop_down_menu_label = document.querySelector("#dropdownMenuButton1-label");
 const div_rot_header = document.querySelector("#div_rot_header");
 const flux_header = document.querySelector("#flux_header");
-const projection_label = document.querySelector("#projection_label");
+const projection_label = document.querySelector("#projection-label");
 const latex_image = document.querySelector("#latex_img");
 const paddlewheel_div = document.querySelector("#paddlewheel_div");
 paddlewheel_div.style.visibility = "hidden";
