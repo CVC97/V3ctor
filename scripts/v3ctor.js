@@ -196,7 +196,12 @@ export function clickedCartesian(event) {
 	y_phi_button.style.visibility = "hidden"
 	F1.coordinate_system = coordinate_system;
 	clickPressField(event);
-	switch_tooltip_coords("polar", mobile_device);
+	// switch_tooltip_coords("polar", mobile_device);
+	if (lang == "de") {
+		switch_language("en", theorem, coordinate_system, mobile_device);
+	} else if (lang == "en") {
+		switch_language("de", theorem, coordinate_system, mobile_device);
+	}
 }
 
 export function clickedPolar(event) {
@@ -218,7 +223,12 @@ export function clickedPolar(event) {
 
 	F1.coordinate_system = coordinate_system;
 	clickPressField(event);
-	switch_tooltip_coords("cartesian", mobile_device);
+	// switch_tooltip_coords("cartesian", mobile_device);
+	if (lang == "de") {
+		switch_language("en", theorem, coordinate_system, mobile_device);
+	} else if (lang == "en") {
+		switch_language("de", theorem, coordinate_system, mobile_device);
+	}
 
 	// Tooltips init
 	tooltipTriggerList = [].slice.call(
