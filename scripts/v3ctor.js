@@ -1038,6 +1038,7 @@ function set_integral_label() {
 		value = res.value;
 		error = res.error;
 	}
+	console.log("Integral label: " + value);
 	integral_label.innerHTML = value.toFixed(2) + "±" + error.toFixed(2);
 }
 

@@ -158,6 +158,7 @@ export class Rectangle {
         max_riemann_error += Math.abs((this.field.value_at(y1,x0).scalar(t_left) - this.field.value_at(y0,x0).scalar(t_left)) * (y1-y0)/precison)
         max_riemann_error += Math.abs((this.field.value_at(y1,x1).scalar(t_right) - this.field.value_at(y0,x1).scalar(t_right)) * (y1-y0)/precison)
 
+        value = this.circulation_top + this.circulation_bottom + this.circulation_left + this.circulation_right;
         value = value / (4*precison) * perimeter
         return { value: value, error: max_riemann_error }
     }
